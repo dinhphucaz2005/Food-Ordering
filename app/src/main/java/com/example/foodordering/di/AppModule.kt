@@ -3,8 +3,11 @@ package com.example.foodordering.di
 import RetrofitClient
 import com.example.foodordering.data.repository.AuthRepositoryImpl
 import com.example.foodordering.data.repository.CustomerRepositoryImpl
+import com.example.foodordering.data.repository.ManagerRepositoryImpl
 import com.example.foodordering.domain.repository.AuthRepository
 import com.example.foodordering.domain.repository.CustomerRepository
+import com.example.foodordering.domain.repository.ManagerRepository
+import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +18,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    private val database by lazy {
+        FirebaseDatabase.getInstance().reference
+    }
+
+    fun provideDatabase() = database
 
     @Provides
     @Singleton
@@ -26,5 +34,9 @@ object AppModule {
     @Singleton
     fun provideCustomerRepository(): CustomerRepository {
         return CustomerRepositoryImpl(RetrofitClient.getApiServiceWithToken())
+    }
+
+    fun provideManagerRepository(): ManagerRepository {
+        return ManagerRepositoryImpl()
     }
 }

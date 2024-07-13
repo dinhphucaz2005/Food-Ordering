@@ -26,9 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.foodordering.R
+import com.example.foodordering.di.FakeData
 import com.example.foodordering.domain.model.Invoice
 import com.example.foodordering.ui.theme.Tertiary
-import com.example.foodordering.util.FakeData
 
 
 @Composable

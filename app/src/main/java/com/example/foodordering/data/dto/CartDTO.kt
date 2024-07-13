@@ -8,6 +8,6 @@ data class CartDTO(
     @SerializedName("_id") val id: String,
     @SerializedName("id_user") val idUser: String,
     @SerializedName("price") val price: Int,
-    @SerializedName("products") val productsDTO: List<ProductDTO>,
+    @SerializedName("products") val productsDTO: List<FoodDTO>,
     @SerializedName("__v") val v: Int
 )

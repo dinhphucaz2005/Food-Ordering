@@ -34,13 +34,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.rememberAsyncImagePainter
 import com.example.foodordering.R
+import com.example.foodordering.domain.model.Food
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
 
 @Preview
 @Composable
-fun DetailScreen() {
+fun DetailScreen(
+    food: Food? = null
+) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +53,7 @@ fun DetailScreen() {
 
 
         val imageRef = createRef()
-        Image(painter = painterResource(id = R.drawable.cake),
+        Image(painter = rememberAsyncImagePainter(model = food?.gallery?.get(0)),
             contentDescription = null,
             modifier = Modifier
                 .constrainAs(imageRef) {
@@ -116,7 +120,7 @@ fun DetailScreen() {
         ) {
             item {
                 Text(
-                    text = "Slutty Brownie",
+                    text = food?.name ?: "No Name",
                     modifier = Modifier,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
@@ -126,7 +130,7 @@ fun DetailScreen() {
 
             item {
                 Text(
-                    text = "$45.00",
+                    text = food?.price.toString(),
                     modifier = Modifier,
                     fontWeight = FontWeight.Bold,
                     fontSize = 36.sp,

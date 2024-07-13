@@ -5,28 +5,34 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.foodordering.domain.model.CartItem
 import com.example.foodordering.domain.model.Food
+import okhttp3.internal.concurrent.formatDuration
 
 class CartViewModel : ViewModel() {
 
-    val cart = mutableStateListOf<CartItem>(
-        CartItem(),
-        CartItem(),
-        CartItem(),
-        CartItem(),
-    )
-
-    var totalPrice = mutableLongStateOf(0)
-
+//    val cart = mutableStateListOf<CartItem>(
+//        CartItem(),
+//        CartItem(),
+//        CartItem(),
+//        CartItem(),
+//    )
+    val cart = mutableStateListOf<CartItem>()
 
     fun addToCart(index: Int) {
         cart[index] = cart[index].copy(quantity = cart[index].quantity + 1)
-        totalPrice.longValue += cart[index].food.price
     }
 
     fun removeFromCart(index: Int) {
         cart[index] = cart[index].copy(quantity = cart[index].quantity - 1)
-        totalPrice.longValue -= cart[index].food.price
     }
 
+    fun addToCart(food: Food) {
+        cart.indices.forEach { index ->
+            if (cart[index].food.id == food.id) {
+                addToCart(index)
+                return
+            }
+        }
+        cart.add(CartItem(food, 1))
+    }
 
 }

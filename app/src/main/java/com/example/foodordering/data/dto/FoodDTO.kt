@@ -3,7 +3,7 @@ package com.example.foodordering.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class ProductDTO(
+data class FoodDTO(
     @SerializedName("address") val address: String,
     @SerializedName("date_created") val dateCreated: String,
     @SerializedName("date_updated") val dateUpdated: Any,

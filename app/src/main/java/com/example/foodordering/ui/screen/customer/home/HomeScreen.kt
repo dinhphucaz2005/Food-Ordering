@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodordering.R
+import com.example.foodordering.domain.model.Food
 import com.example.foodordering.ui.component.TopAppBarHome
 import com.example.foodordering.ui.screen.customer.cart.CartViewModel
 import com.example.foodordering.ui.screen.customer.component.Categories
@@ -75,6 +76,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     onCheckout: () -> Unit = {},
     viewModel: HomeViewModel = viewModel(),
+    gotoDetail: (Food) -> Unit = {},
     cartViewModel: CartViewModel = viewModel()
 ) {
 
@@ -117,7 +119,7 @@ fun HomeScreen(
                 }
 
                 SearchBar(
-                    modifier = Modifier.padding(top = 20.dp),
+                    modifier = Modifier.padding(top = 20.dp).fillMaxWidth(),
                     placeholder = { Text(text = "Search ...") },
                     query = searchValue,
                     onQueryChange = { searchValue = it },
@@ -284,8 +286,10 @@ fun HomeScreen(
                 val listFood = viewModel.listFoodState
 
                 item {
-                    FoodRecyclerView(listFood) { food ->
-                        cartViewModel.addToCart(0)
+                    FoodRecyclerView(listFood, addCart = {
+                        cartViewModel.addToCart(it)
+                    }) { food ->
+                        gotoDetail(food)
                     }
                 }
             }

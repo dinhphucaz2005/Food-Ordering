@@ -28,10 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.foodordering.ui.theme.DarkColorScheme
 
+
+@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTextField(
-    state: MutableState<String>, modifier: Modifier, labelString: String, icon: ImageVector
+    state: MutableState<String> = mutableStateOf(""),
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    labelString: String = "Username",
+    icon: ImageVector = Icons.Default.Email
 ) {
 
     TextField(
@@ -56,8 +61,7 @@ fun MyTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         label = {
             Text(
                 text = labelString,
@@ -71,16 +75,5 @@ fun MyTextField(
     )
 }
 
-@SuppressLint("UnrememberedMutableState")
-@Preview
-@Composable
-fun MyTextFieldPreview() {
-    MyTextField(
-        state = mutableStateOf(""),
-        modifier = Modifier.fillMaxWidth(),
-        labelString = "Username",
-        icon = Icons.Default.Email
-    )
-}
 
 

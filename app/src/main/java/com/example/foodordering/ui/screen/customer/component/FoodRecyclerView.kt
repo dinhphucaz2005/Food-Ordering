@@ -41,7 +41,8 @@ import com.example.foodordering.ui.theme.TextColor
 @Composable
 fun FoodRecyclerView(
     listFood: List<Food> = FakeData.provideListFood(),
-    addCart: (Food) -> Unit = {}
+    addCart: (Food) -> Unit = {},
+    gotoDetail: (Food) -> Unit = {}
 ) {
     LazyRow(
         modifier = Modifier
@@ -65,10 +66,14 @@ fun FoodRecyclerView(
                 verticalArrangement = Arrangement.Center
             ) {
                 Image(
-                    modifier = Modifier.size(100.dp),
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clickable {
+                            gotoDetail(item)
+                        },
                     painter = rememberAsyncImagePainter(item.gallery.first()),
                     contentDescription = "",
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Crop
                 )
 
                 Text(

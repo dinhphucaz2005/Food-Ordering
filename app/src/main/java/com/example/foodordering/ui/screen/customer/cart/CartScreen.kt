@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.foodordering.R
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
@@ -58,10 +60,10 @@ import com.example.foodordering.ui.theme.TextColor
 @Preview
 @Composable
 fun CartScreen(
-    viewModel: CartViewModel = viewModel()
+    viewModel: CartViewModel = viewModel(),
+    popBackStack: () -> Unit = {}
 ) {
     val cart = viewModel.cart
-    val totalPrice = viewModel.totalPrice
 
     Column(
         modifier = Modifier
@@ -82,7 +84,9 @@ fun CartScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                popBackStack()
+            }) {
                 Icon(
                     modifier = Modifier.size(32.dp, 32.dp),
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -92,8 +96,7 @@ fun CartScreen(
             }
 
             Text(
-                text = "Cart Items",
-                color = TextColor,
+                text = "Cart Items", color = TextColor,
                 modifier = Modifier
                     .padding(end = 32.dp)
                     .fillMaxWidth(),
@@ -128,16 +131,15 @@ fun CartScreen(
                     ) {
                         val imageRef = createRef()
 
-                        Image(
-                            modifier = Modifier
-                                .constrainAs(imageRef) {
-                                    start.linkTo(parent.start)
-                                }
-                                .fillMaxHeight()
-                                .aspectRatio(1f),
-                            painter = painterResource(R.drawable.burger2),
+                        Image(modifier = Modifier
+                            .constrainAs(imageRef) {
+                                start.linkTo(parent.start)
+                            }
+                            .fillMaxHeight()
+                            .aspectRatio(1f),
+                            painter = rememberAsyncImagePainter(model = cartItem.food.gallery[0]),
                             contentDescription = "",
-                        )
+                            contentScale = ContentScale.Crop)
 
                         val rowRef = createRef()
 
@@ -242,7 +244,6 @@ fun CartScreen(
                                 start.linkTo(priceRef.start)
                             })
 
-
                     }
                 }
             }
@@ -256,7 +257,7 @@ fun CartScreen(
                     .fillMaxWidth()
                     .heightIn(max = 120.dp)
             ) {
-                itemsIndexed(cart) { index, cartItem ->
+                itemsIndexed(cart) { _, cartItem ->
                     PriceDetailItem(
                         text = cartItem.food.name,
                         text2 = "${cartItem.quantity} x ${cartItem.food.price}"
@@ -274,7 +275,7 @@ fun CartScreen(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = "$ ${totalPrice.longValue}",
+                    text = "$ ${cart.sumOf { it.food.price * it.quantity }}",
                     fontSize = 16.sp,
                     color = Tertiary,
                     fontWeight = FontWeight.Bold,
@@ -375,9 +376,7 @@ fun ApplyCoupon() {
 
 @Composable
 fun PriceDetailItem(
-    modifier: Modifier = Modifier,
-    text: String = "Lasagna",
-    text2: String = "0 x 5000"
+    modifier: Modifier = Modifier, text: String = "Lasagna", text2: String = "0 x 5000"
 ) {
     Row(
         modifier = modifier
@@ -386,13 +385,14 @@ fun PriceDetailItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = text, fontWeight = FontWeight.Bold, fontSize = 16.sp,
+            text = text,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
             color = TextColor,
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = text2, fontWeight = FontWeight.Bold, fontSize = 16.sp,
-            color = TextColor
+            text = text2, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextColor
         )
 
     }
