@@ -13,7 +13,6 @@ android {
     defaultConfig {
         applicationId = "com.example.foodordering"
         minSdk = 24
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -81,11 +80,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
-    // Glide
-    implementation(libs.glide)
-
     // Lottie
-    implementation(libs.lottie)
+    implementation(libs.lottie.compose)
 
     // View model
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -101,15 +97,21 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
 
-
     //Coil
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.ktor)
 
-    //
-    implementation(libs.accompanist.pager)
+    //Ktor
+    implementation(libs.ktor.client.okhttp)
+
+
     //Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.47")
-    kapt("com.google.dagger:hilt-android-compiler:2.47")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation(libs.hilt.android.v249)
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.androidx.hilt.compiler)
+
+    //Navigation
     implementation(libs.androidx.hilt.navigation.compose.v110alpha01)
+
+
 }

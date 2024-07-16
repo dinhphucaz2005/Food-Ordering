@@ -2,6 +2,7 @@ package com.example.foodordering.ui.screen.manager.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -27,16 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.foodordering.R
 import com.example.foodordering.di.FakeData
-import com.example.foodordering.domain.model.Invoice
-import com.example.foodordering.ui.theme.Tertiary
+import com.example.foodordering.domain.model.Bill
+import com.example.foodordering.ui.theme.Background
 
 
 @Composable
-fun Item(modifier: Modifier = Modifier, invoice: Invoice = FakeData.provideInvoices()[0]) {
+fun Item(modifier: Modifier = Modifier, bill: Bill = FakeData.provideBills()[0]) {
     ConstraintLayout(
         modifier = modifier
             .background(
-                color = Tertiary,
+                color = Background,
                 shape = RoundedCornerShape(20.dp)
             )
             .fillMaxWidth()
@@ -62,7 +64,7 @@ fun Item(modifier: Modifier = Modifier, invoice: Invoice = FakeData.provideInvoi
         val idInvoice = createRef()
 
         Text(
-            text = invoice.id,
+            text = "${bill.time}",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.constrainAs(idInvoice) {
                 start.linkTo(img.end, margin = 10.dp)
@@ -73,7 +75,7 @@ fun Item(modifier: Modifier = Modifier, invoice: Invoice = FakeData.provideInvoi
         val statusInvoice = createRef()
 
         Text(
-            text = invoice.status,
+            text = "pending",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.constrainAs(statusInvoice) {
                 start.linkTo(idInvoice.start)
@@ -94,7 +96,7 @@ fun Item(modifier: Modifier = Modifier, invoice: Invoice = FakeData.provideInvoi
 
         val totalPrice = createRef()
         Text(
-            text = invoice.totalPrice.toString(),
+            text = bill.total.toString(),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.constrainAs(totalPrice) {
                 top.linkTo(idInvoice.top)
@@ -104,7 +106,7 @@ fun Item(modifier: Modifier = Modifier, invoice: Invoice = FakeData.provideInvoi
         val tableNumber = createRef()
 
         Text(
-            text = invoice.tableNumber.toString(),
+            text = bill.cart.size.toString(),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.constrainAs(tableNumber) {
                 end.linkTo(totalPrice.end)
@@ -117,13 +119,10 @@ fun Item(modifier: Modifier = Modifier, invoice: Invoice = FakeData.provideInvoi
 
 @Preview
 @Composable
-fun ItemPreview() {
-    Item()
-}
-
-@Composable
-fun InvoiceRecyclerView(
-    modifier: Modifier = Modifier
+fun BillRecyclerView(
+    modifier: Modifier = Modifier,
+    onItemClick: (Bill) -> Unit = {},
+    bills: List<Bill> = FakeData.provideBills()
 ) {
     LazyColumn(
         modifier = modifier
@@ -134,14 +133,9 @@ fun InvoiceRecyclerView(
         contentPadding = PaddingValues(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        items(FakeData.provideInvoices().size) {
-            Item(invoice = FakeData.provideInvoices()[it])
+        itemsIndexed(bills) { _, item ->
+            Item(modifier = Modifier.clickable { onItemClick(item) }, bill = item)
         }
     }
 }
 
-@Preview
-@Composable
-fun InvoiceRecyclerViewPreview() {
-    InvoiceRecyclerView()
-}

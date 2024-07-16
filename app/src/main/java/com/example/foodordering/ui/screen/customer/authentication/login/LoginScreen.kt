@@ -29,11 +29,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.BrushPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.widget.Barrier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodordering.R
 import com.example.foodordering.ui.component.MyTextField
@@ -55,6 +60,8 @@ fun LoginScreen(
             //TODO("show error message")
         }
     }
+
+    val loading = viewModel.isLoginLoading
 
     ConstraintLayout(
         modifier = Modifier
@@ -182,27 +189,10 @@ fun LoginScreen(
 
         }
 
-//        if (viewModel.isLoginLoading.value) {
-//            Text(text = "Login",
-//                modifier = Modifier.constrainAs(createRef()) {
-//                    top.linkTo(parent.top)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                }
-//            )
-////            LoadingScreen(Modifier.constrainAs(createRef()) {
-////                top.linkTo(parent.top)
-////                start.linkTo(parent.start)
-////            })
-//        } else {
-//            Text(text = "Login **************",
-//                modifier = Modifier.constrainAs(createRef()) {
-//                    top.linkTo(parent.top)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                }
-//            )
+//        if (!loading.value) {
+//
 //        }
+
 
     }
 }

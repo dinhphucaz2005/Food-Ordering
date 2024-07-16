@@ -61,9 +61,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodordering.R
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.ui.component.TopAppBarHome
+import com.example.foodordering.ui.screen.component.BannerSlider
 import com.example.foodordering.ui.screen.customer.cart.CartViewModel
-import com.example.foodordering.ui.screen.customer.component.Categories
-import com.example.foodordering.ui.screen.customer.component.FoodRecyclerView
+import com.example.foodordering.ui.screen.component.Categories
+import com.example.foodordering.ui.screen.component.FoodRecyclerView
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.DarkColorScheme
 import com.example.foodordering.ui.theme.Tertiary
@@ -101,7 +102,7 @@ fun HomeScreen(
                     )
                     .fillMaxWidth()
                     .padding(20.dp)
-                    .height(180.dp)
+                    .height(120.dp)
                     .constrainAs(topBarRef) {
                         top.linkTo(parent.top)
                     }
@@ -119,7 +120,9 @@ fun HomeScreen(
                 }
 
                 SearchBar(
-                    modifier = Modifier.padding(top = 20.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .fillMaxWidth(),
                     placeholder = { Text(text = "Search ...") },
                     query = searchValue,
                     onQueryChange = { searchValue = it },
@@ -216,51 +219,18 @@ fun HomeScreen(
                             .background(Color(0xFFF3AC8B))
                     ) {
                         val imageRef = createRef()
-                        Image(
-                            painter = painterResource(id = R.drawable.cake),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .aspectRatio(1.5f)
-                                .constrainAs(imageRef) {
-                                    top.linkTo(parent.top)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(parent.bottom)
-                                }
-                                .clip(
-                                    RoundedCornerShape(
-                                        topStartPercent = 25,
-                                        bottomStartPercent = 25
-                                    )
-                                ),
-                            contentScale = ContentScale.Crop
-                        )
-
-                        val (text1Ref, text2Ref) = createRefs()
-
-                        Text(
-                            text = "Get Special Offer", color = Color.Black, fontSize = 24.sp,
-                            fontFamily = FontFamily.Cursive,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.constrainAs(text1Ref) {
-                                top.linkTo(parent.top, margin = 12.dp)
-                                start.linkTo(parent.start, margin = 24.dp)
-                            }
-                        )
-
-
-                        Text(
-                            text = "Up to 40%", color = Color.Black, fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.constrainAs(text2Ref) {
-                                top.linkTo(text1Ref.bottom, margin = 12.dp)
-                                start.linkTo(parent.start, margin = 24.dp)
-                            }
-                        )
-
+                        BannerSlider(modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1.5f)
+                            .constrainAs(
+                                imageRef
+                            ) {
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                                end.linkTo(parent.end)
+                            })
                     }
                 }
-
                 item {
                     Text(
                         modifier = Modifier.padding(top = 20.dp),
@@ -272,7 +242,6 @@ fun HomeScreen(
 
                     Categories(Modifier.padding(top = 10.dp))
                 }
-
                 item {
                     Text(
                         modifier = Modifier.padding(top = 20.dp),
@@ -282,9 +251,7 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-
                 val listFood = viewModel.listFoodState
-
                 item {
                     FoodRecyclerView(listFood, addCart = {
                         cartViewModel.addToCart(it)

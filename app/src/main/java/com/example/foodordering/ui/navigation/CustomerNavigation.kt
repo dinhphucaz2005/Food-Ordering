@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.foodordering.domain.model.Food
-import com.example.foodordering.ui.screen.customer.Routes
+import com.example.foodordering.ui.screen.customer.CustomerRoutes
 import com.example.foodordering.ui.screen.customer.authentication.login.LoginScreen
 import com.example.foodordering.ui.screen.customer.authentication.register.RegisterScreen
 import com.example.foodordering.ui.screen.customer.cart.CartScreen
@@ -25,34 +25,34 @@ fun CustomerNavigation() {
 
     var food: Food? = null
 
-    NavHost(navController = navController, startDestination = Routes.LOGIN) {
-        composable(Routes.LOGIN) {
+    NavHost(navController = navController, startDestination = CustomerRoutes.LOGIN) {
+        composable(CustomerRoutes.LOGIN) {
             LoginScreen(onLoginSuccess = {
                 navController.popBackStack()
-                navController.navigate(Routes.HOME)
+                navController.navigate(CustomerRoutes.HOME)
             }, navigateRegister = {
-                navController.navigate(Routes.REGISTER)
+                navController.navigate(CustomerRoutes.REGISTER)
             })
         }
-        composable(Routes.REGISTER) {
+        composable(CustomerRoutes.REGISTER) {
             RegisterScreen(onRegisterSuccess = {
                 navController.popBackStack()
             })
         }
-        composable(Routes.HOME) {
+        composable(CustomerRoutes.HOME) {
             HomeScreen(onCheckout = {
-                navController.navigate(Routes.CART)
+                navController.navigate(CustomerRoutes.CART)
             }, cartViewModel = cartViewModel, gotoDetail = {
                 food = it
-                navController.navigate(Routes.DETAIL)
+                navController.navigate(CustomerRoutes.DETAIL)
             })
         }
-        composable(Routes.CART) {
+        composable(CustomerRoutes.CART) {
             CartScreen(viewModel = cartViewModel, popBackStack = {
                 navController.popBackStack()
             })
         }
-        composable(Routes.DETAIL) {
+        composable(CustomerRoutes.DETAIL) {
             DetailScreen(food)
         }
     }

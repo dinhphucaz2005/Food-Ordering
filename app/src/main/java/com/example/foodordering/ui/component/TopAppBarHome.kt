@@ -31,7 +31,6 @@ import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.DarkColorScheme
 import com.example.foodordering.ui.theme.TextColor
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarHome(
     text: String = "Food Ordering",

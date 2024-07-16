@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodordering.di.AppModule
 import com.example.foodordering.util.AppResource
 import com.example.foodordering.util.AuthHelper
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 //@HiltViewModel
@@ -30,16 +31,21 @@ class LoginViewModel
             if (isLoginLoading.value) {
                 return@launch
             }
-            val result = repository.login(username.value, password.value)
-            if (result is AppResource.Success) {
-                val userDTO = result.data
-                if (userDTO != null) {
-                    userDTO.token?.let { RetrofitClient.createRetrofitWithToken(it) }
-                }
-                loginSuccess.value = true
-            } else {
-                errorMessage.value = (result as AppResource.Error).error
-            }
+            isLoginLoading.value = true
+            delay(1000)
+            loginSuccess.value = true
+            RetrofitClient.createRetrofitWithToken("")
+//            val result = repository.login(username.value, password.value)
+//            if (result is AppResource.Success) {
+//                val userDTO = result.data
+//                if (userDTO != null) {
+//                    userDTO.token?.let { RetrofitClient.createRetrofitWithToken(it) }
+//                }
+//                loginSuccess.value = true
+//            } else {
+//                errorMessage.value = (result as AppResource.Error).error
+//            }
+            isLoginLoading.value = false
         }
     }
 }

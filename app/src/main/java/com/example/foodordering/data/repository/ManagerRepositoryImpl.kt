@@ -1,6 +1,7 @@
 package com.example.foodordering.data.repository
 
 import com.example.foodordering.di.AppModule
+import com.example.foodordering.domain.model.Bill
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.domain.repository.ManagerRepository
 import com.example.foodordering.util.AppResource
@@ -32,6 +33,28 @@ class ManagerRepositoryImpl : ManagerRepository {
 
                     override fun onCancelled(databaseError: DatabaseError) {
                         continuation.resume(AppResource.Error(databaseError.message))
+                    }
+                })
+            }
+        }
+    }
+
+    override suspend fun getBills(): AppResource<List<Bill>> {
+        return withContext(Dispatchers.IO) {
+            suspendCancellableCoroutine { continuation ->
+                val dataRef = database.child("bill")
+                dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val billList = mutableListOf<Bill>()
+                        for (billSnapshot in snapshot.children) {
+                            val bill = billSnapshot.getValue(Bill::class.java)
+                            bill?.let { billList.add(it) }
+                        }
+                        continuation.resume(AppResource.Success(billList))
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
                     }
                 })
             }

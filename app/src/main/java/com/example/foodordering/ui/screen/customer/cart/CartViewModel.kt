@@ -2,19 +2,20 @@ package com.example.foodordering.ui.screen.customer.cart
 
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.foodordering.di.AppModule
 import com.example.foodordering.domain.model.CartItem
 import com.example.foodordering.domain.model.Food
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.internal.concurrent.formatDuration
 
 class CartViewModel : ViewModel() {
 
-//    val cart = mutableStateListOf<CartItem>(
-//        CartItem(),
-//        CartItem(),
-//        CartItem(),
-//        CartItem(),
-//    )
+    private val database = AppModule.provideDatabase()
+
     val cart = mutableStateListOf<CartItem>()
 
     fun addToCart(index: Int) {
@@ -35,4 +36,37 @@ class CartViewModel : ViewModel() {
         cart.add(CartItem(food, 1))
     }
 
+    val inProgress = mutableStateOf(false)
+
+    fun checkout() {
+        viewModelScope.launch {
+            data class FirebaseCartItem(
+                val idProduct: String,
+                val quantity: Int
+            )
+
+            data class Bill(
+                val total: Long,
+                val time: String,
+                var cart: List<FirebaseCartItem>
+            )
+
+            val newBill = Bill(
+                cart.sumOf { it.food.price * it.quantity },
+                "${System.currentTimeMillis()}",
+                cart.map { FirebaseCartItem(it.food.id, it.quantity) }
+            )
+            inProgress.value = true
+            delay(2000)
+            database.child("bill").child("${System.currentTimeMillis()}")
+                .setValue(newBill)
+                .addOnSuccessListener {
+                    cart.clear()
+                }
+                .addOnFailureListener {
+                    println("CartViewModel.checkout: ${it.message}")
+                }
+            inProgress.value = false
+        }
+    }
 }

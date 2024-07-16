@@ -51,8 +51,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.example.foodordering.R
+import com.example.foodordering.ui.screen.splash.WaitingScreen
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
 import com.example.foodordering.ui.theme.TextColor
@@ -79,14 +80,11 @@ fun CartScreen(
                 .fillMaxWidth()
                 .background(
                     color = Background
-                )
-                .padding(top = 16.dp),
+                ),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {
-                popBackStack()
-            }) {
+            IconButton(onClick = { popBackStack() }) {
                 Icon(
                     modifier = Modifier.size(32.dp, 32.dp),
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -108,16 +106,17 @@ fun CartScreen(
 
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
-                .background(
-                    color = Color.White, shape = RoundedCornerShape(16.dp)
-                )
-                .padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
+                .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 400.dp),
+                    .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(cart) { index, cartItem ->
@@ -155,7 +154,6 @@ fun CartScreen(
                             .padding(4.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween) {
-
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
@@ -250,7 +248,12 @@ fun CartScreen(
 
             ApplyCoupon()
 
-            Text(text = "Price Details", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text(
+                modifier = Modifier,
+                text = "Price Details",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
 
             LazyColumn(
                 modifier = Modifier
@@ -267,7 +270,10 @@ fun CartScreen(
 
             HorizontalDivider(thickness = 2.dp)
 
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
                 Text(
                     text = "Total Amount Payable",
                     fontSize = 16.sp,
@@ -284,10 +290,12 @@ fun CartScreen(
             }
 
             Button(
-                onClick = { },
+                onClick = {
+                    viewModel.checkout()
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Tertiary),
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(start = 8.dp, end = 8.dp, top = 12.dp)
                     .fillMaxWidth()
                     .height(60.dp),
                 shape = RoundedCornerShape(8.dp)
@@ -305,17 +313,24 @@ fun CartScreen(
                 )
             }
 
+
         }
-
-
     }
+
+    val inProgress = viewModel.inProgress
+
+    if (inProgress.value) {
+        WaitingScreen()
+    }
+
 }
 
-
 @Composable
-fun ApplyCoupon() {
+fun ApplyCoupon(
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
@@ -394,6 +409,5 @@ fun PriceDetailItem(
         Text(
             text = text2, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextColor
         )
-
     }
 }

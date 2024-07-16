@@ -1,24 +1,24 @@
 package com.example.foodordering.di
 
 import com.example.foodordering.domain.model.Food
-import com.example.foodordering.domain.model.Invoice
+import com.example.foodordering.domain.model.Bill
 
 object FakeData {
 
     fun provideListFood() = List(10) { Food() }
 
-    fun provideInvoices(): List<Invoice> {
+    fun provideBills(): List<Bill> {
         return listOf(
-            Invoice(),
-            Invoice(),
-            Invoice(),
-            Invoice(),
-            Invoice(),
-            Invoice(),
-            Invoice(),
-            Invoice(),
-            Invoice(),
-            Invoice(),
+            Bill(),
+            Bill(),
+            Bill(),
+            Bill(),
+            Bill(),
+            Bill(),
+            Bill(),
+            Bill(),
+            Bill(),
+            Bill(),
         )
     }
 

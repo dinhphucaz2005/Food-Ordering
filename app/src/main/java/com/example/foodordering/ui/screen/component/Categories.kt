@@ -1,4 +1,4 @@
-package com.example.foodordering.ui.screen.customer.component
+package com.example.foodordering.ui.screen.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

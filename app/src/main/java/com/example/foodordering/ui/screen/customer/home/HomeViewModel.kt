@@ -4,18 +4,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foodordering.di.AppModule
-import com.example.foodordering.di.FakeData
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.util.AppResource
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
-
     private val repository by lazy {
         AppModule.provideCustomerRepository()
     }
-
 
     var listFoodState = mutableStateListOf<Food>()
 
@@ -26,7 +23,6 @@ class HomeViewModel : ViewModel() {
                 is AppResource.Success -> {
                     result.data?.let {
                         listFoodState.addAll(it)
-                        println(it)
                     }
                 }
 
@@ -36,6 +32,4 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
-
-
 }

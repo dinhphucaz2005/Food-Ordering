@@ -34,9 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.example.foodordering.R
 import com.example.foodordering.domain.model.Food
+import com.example.foodordering.ui.screen.component.BannerSlider
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
 
@@ -53,15 +54,14 @@ fun DetailScreen(
 
 
         val imageRef = createRef()
-        Image(painter = rememberAsyncImagePainter(model = food?.gallery?.get(0)),
-            contentDescription = null,
-            modifier = Modifier
-                .constrainAs(imageRef) {
-                    top.linkTo(parent.top)
-                }
-                .fillMaxWidth()
-                .height(240.dp),
-            contentScale = ContentScale.Crop)
+        BannerSlider(modifier = Modifier
+            .constrainAs(imageRef) {
+                top.linkTo(parent.top)
+            }
+            .fillMaxWidth()
+            .height(240.dp),
+            urls = food?.gallery ?: emptyList())
+
 
         val favouriteButtonRef = createRef()
         FloatingActionButton(onClick = { },

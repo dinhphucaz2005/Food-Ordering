@@ -1,6 +1,6 @@
 package com.example.foodordering.ui.screen.customer
 
-object Routes {
+object CustomerRoutes {
     const val DETAIL = "details"
     const val CART = "cart"
     const val HOME = "home"

@@ -1,4 +1,4 @@
-package com.example.foodordering.ui.screen.customer.component
+package com.example.foodordering.ui.screen.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.example.foodordering.di.FakeData
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.ui.theme.Tertiary
