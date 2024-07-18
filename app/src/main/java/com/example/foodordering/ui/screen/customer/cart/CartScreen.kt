@@ -263,7 +263,8 @@ fun CartScreen(
                 itemsIndexed(cart) { _, cartItem ->
                     PriceDetailItem(
                         text = cartItem.food.name,
-                        text2 = "${cartItem.quantity} x ${cartItem.food.price}"
+                        text2 = "${cartItem.quantity} x ${cartItem.food.price} " +
+                                "= ${cartItem.food.price * cartItem.quantity}"
                     )
                 }
             }
@@ -312,8 +313,6 @@ fun CartScreen(
                         .size(20.dp, 20.dp)
                 )
             }
-
-
         }
     }
 
@@ -407,7 +406,9 @@ fun PriceDetailItem(
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = text2, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextColor
+            text = text2,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp, color = TextColor
         )
     }
 }

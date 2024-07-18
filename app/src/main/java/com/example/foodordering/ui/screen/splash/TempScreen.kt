@@ -2,6 +2,7 @@ package com.example.foodordering.ui.screen.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +38,8 @@ import com.example.foodordering.ui.theme.DarkColorScheme
 
 @Composable
 fun Item(
-    modifier: Modifier, painter: Painter, color: Color, text: String
+    modifier: Modifier, painter: Painter, color: Color, text: String,
+    navigate: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -51,6 +53,9 @@ fun Item(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
+                .clickable {
+                    navigate()
+                }
         )
         Text(
             text = text,
@@ -67,7 +72,8 @@ fun Item(
 @Preview
 @Composable
 fun TempScreen(
-
+    navigateToManager: () -> Unit = {},
+    navigateToCustomer: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -99,7 +105,10 @@ fun TempScreen(
                     .weight(1f),
                 painterResource(id = R.drawable.main),
                 color = DarkColorScheme.primary,
-                text = "Manager"
+                text = "Manager",
+                navigate = {
+                    navigateToManager()
+                }
             )
             Item(
                 modifier = Modifier
@@ -128,7 +137,10 @@ fun TempScreen(
                     .weight(1f),
                 painterResource(id = R.drawable.main4),
                 color = DarkColorScheme.primary,
-                text = "Customer"
+                text = "Customer",
+                navigate = {
+                    navigateToCustomer()
+                }
             )
         }
 
