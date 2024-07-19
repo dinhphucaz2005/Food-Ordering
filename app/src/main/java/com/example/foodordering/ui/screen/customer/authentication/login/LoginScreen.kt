@@ -92,7 +92,7 @@ fun LoginScreen(
         ) {
 
             MyTextField(
-                state = viewModel.username,
+                state = viewModel.email,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp),

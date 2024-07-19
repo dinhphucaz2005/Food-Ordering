@@ -12,17 +12,15 @@ class RegisterViewModel : ViewModel() {
 
     private val repository = AppModule.provideAuthRepository()
 
-    val username = mutableStateOf("")
-    val password = mutableStateOf("")
-    val phoneNumber = mutableStateOf("")
-    val email = mutableStateOf("")
-    val registerSuccess = mutableStateOf(false)
+    val username = mutableStateOf("dinhphucaz52")
+    val password = mutableStateOf("dinhphucaz52")
+    val phoneNumber = mutableStateOf("0369522657")
+    val email = mutableStateOf("dinhphucaz52@gmail.com")
+    val isLoading = mutableStateOf(false)
 
-    private var errorMessage: String = ""
+    private var registerMessage: String = ""
 
-    fun getErrorMessage(): String {
-        return errorMessage
-    }
+    fun getRegisterMessage(): String = registerMessage
 
     fun register() {
         viewModelScope.launch {
@@ -34,17 +32,26 @@ class RegisterViewModel : ViewModel() {
                 AuthHelper.validateUsername(username.value)
             )
                 return@launch
-
+            isLoading.value = true
             val result =
-                repository.register(username.value, email.value, password.value, phoneNumber.value)
+                repository.register(
+                    username.value,
+                    "username",
+                    email.value,
+                    password.value,
+                    phoneNumber.value
+                )
+            isLoading.value = false
+            registerMessage = when (result) {
+                is AppResource.Success -> {
+                    "Register success"
+                }
 
-            if (result is AppResource.Success) {
-                registerSuccess.value = true
-            } else {
-                errorMessage = (result as AppResource.Error).error
+                is AppResource.Error -> {
+                    result.error
+                }
             }
-
         }
+        // Handle success case
     }
-
 }

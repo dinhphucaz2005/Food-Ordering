@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.foodordering.data.repository.ImageRepositoryImpl
 
 class AddFoodViewModel : ViewModel() {
 
@@ -12,18 +13,11 @@ class AddFoodViewModel : ViewModel() {
 
 
     fun addImage() {
-
+        TODO("Not yet implemented")
     }
 
     fun addToFireBase() {
-//        FakeData.provideListFood().forEach {
-//            database.child("test").setValue(Food())
-//                .addOnSuccessListener {
-//                }
-//                .addOnFailureListener {
-//                    val res = 0
-//                }
-//        }
+        TODO("Not yet implemented")
     }
 
     val imageListState = mutableStateListOf<Uri>(Uri.parse("SDLf"))

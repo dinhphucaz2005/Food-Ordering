@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.example.foodordering.data.repository.AuthRepositoryImpl
 import com.example.foodordering.data.repository.CustomerRepositoryImpl
+import com.example.foodordering.data.repository.FAuthRepositoryImpl
 import com.example.foodordering.data.repository.ManagerRepositoryImpl
 import com.example.foodordering.domain.repository.AuthRepository
 import com.example.foodordering.domain.repository.CustomerRepository

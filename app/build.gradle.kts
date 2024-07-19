@@ -112,6 +112,4 @@ dependencies {
 
     //Navigation
     implementation(libs.androidx.hilt.navigation.compose.v110alpha01)
-
-
 }
