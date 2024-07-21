@@ -1,5 +1,9 @@
 package com.example.foodordering.ui.screen.manager.addfood
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,17 +11,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -29,12 +32,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.foodordering.ui.screen.component.DefaultButton
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
@@ -47,9 +52,24 @@ fun AddFood(
 ) {
 
     val imageList = viewModel.imageListState
-    val id = viewModel.idState
     val name = viewModel.nameState
     val price = viewModel.priceState
+
+    val multiPhotosPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(),
+        onResult = {
+            val list = imageList.value.toMutableList()
+            list.addAll(it)
+            imageList.value = it
+        }
+    )
+
+    viewModel.message.value.let {
+        if (it.isNotEmpty()) {
+            Toast.makeText(LocalContext.current, it, Toast.LENGTH_SHORT).show()
+            viewModel.message.value = ""
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -87,12 +107,6 @@ fun AddFood(
         }
 
         CustomTextView(
-            text = id,
-            modifier = Modifier
-                .fillMaxWidth(), label = "Id"
-        )
-
-        CustomTextView(
             text = name,
             modifier = Modifier
                 .fillMaxWidth(), label = "Name"
@@ -114,17 +128,21 @@ fun AddFood(
                 fontWeight = FontWeight.Bold
             )
             DefaultButton(onClick = {
-                viewModel.addImage()
+                multiPhotosPickerLauncher.launch(
+                    PickVisualMediaRequest(
+                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
+                )
             }) {
                 Text(text = "Add Image")
             }
         }
 
-        if (imageList.isEmpty()) {
+        if (imageList.value.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp), contentAlignment = Alignment.Center
+                    .height(120.dp), contentAlignment = Alignment.Center
             ) {
                 Text(text = "No Image Found")
             }
@@ -132,12 +150,15 @@ fun AddFood(
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(120.dp)
             ) {
-                item {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "${imageList.size} Images Found")
-                    }
+                itemsIndexed(imageList.value) { _, item ->
+                    AsyncImage(
+                        model = item,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(8.dp)
+                    )
                 }
             }
         }
@@ -147,7 +168,7 @@ fun AddFood(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             DefaultButton(onClick = {
-                viewModel.addToFireBase()
+                viewModel.addFood()
             }, modifier = Modifier.width(100.dp)) {
                 Text(text = "Add")
             }

@@ -7,6 +7,7 @@ import com.example.foodordering.di.AppModule
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.domain.repository.CustomerRepository
 import com.example.foodordering.util.AppResource
+import com.example.foodordering.util.FirebaseChild
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -28,24 +29,22 @@ class CustomerRepositoryImpl(
     }
 
     override suspend fun getFoods(): AppResource<List<Food>> {
-        return withContext(Dispatchers.IO) {
-            suspendCancellableCoroutine { continuation ->
-                val dataRef = database.child("food")
-                dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val foodList = mutableListOf<Food>()
-                        for (foodSnapshot in dataSnapshot.children) {
-                            val food = foodSnapshot.getValue(Food::class.java)
-                            food?.let { foodList.add(it) }
-                        }
-                        continuation.resume(AppResource.Success(foodList))
+        return suspendCoroutine { continuation ->
+            val dataRef = database.child(FirebaseChild.FOOD)
+            dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val foodList = mutableListOf<Food>()
+                    for (foodSnapshot in dataSnapshot.children) {
+                        val food = foodSnapshot.getValue(Food::class.java)
+                        food?.let { foodList.add(it) }
                     }
+                    continuation.resume(AppResource.Success(foodList))
+                }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        continuation.resume(AppResource.Error(databaseError.message))
-                    }
-                })
-            }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    continuation.resume(AppResource.Error(databaseError.message))
+                }
+            })
         }
     }
 

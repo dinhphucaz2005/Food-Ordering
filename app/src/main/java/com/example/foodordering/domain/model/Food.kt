@@ -5,7 +5,7 @@ import kotlin.random.Random
 data class Food(
     var id: String,
     var name: String,
-    var price: Long,
+    var price: Int,
     var gallery: List<String>,
 ) {
 
@@ -19,7 +19,7 @@ data class Food(
             "Lasagna"
         )[rand]
 
-        price = Random.nextInt(1, 5).toLong() * 100
+        price = Random.nextInt(1, 5) * 100
 
         gallery = listOf(
             listOf(

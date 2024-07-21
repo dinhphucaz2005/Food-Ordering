@@ -1,6 +1,7 @@
 package com.example.foodordering.ui.screen.customer.authentication.register
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodordering.R
 import com.example.foodordering.ui.component.MyTextField
+import com.example.foodordering.ui.screen.splash.WaitingScreen
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.DarkColorScheme
 import com.example.foodordering.ui.theme.TextColor
@@ -45,17 +48,6 @@ fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     viewModel: RegisterViewModel = viewModel(),
 ) {
-
-    val tmp by remember {
-        viewModel.registerSuccess
-    }
-
-    when (tmp) {
-        true -> onRegisterSuccess()
-        else -> {
-            //TODO("show error message")
-        }
-    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -174,8 +166,24 @@ fun RegisterScreen(
             }
 
         }
-
     }
+
+    viewModel.registerSuccess.value.let {
+        if (it) {
+            onRegisterSuccess()
+        }
+    }
+
+    if (viewModel.isLoading.value) {
+        WaitingScreen()
+    }
+
+    viewModel.registerMessage.value.let {
+        if (it.isNotEmpty()) {
+            Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
+        }
+    }
+
 }
 
 @Composable

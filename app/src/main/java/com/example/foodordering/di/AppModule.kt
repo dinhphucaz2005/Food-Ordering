@@ -1,16 +1,14 @@
 package com.example.foodordering.di
 
-import RetrofitClient
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import com.example.foodordering.data.repository.AuthRepositoryImpl
-import com.example.foodordering.data.repository.CustomerRepositoryImpl
-import com.example.foodordering.data.repository.ManagerRepositoryImpl
+import com.example.foodordering.data.repository.firebase.FAuthRepositoryImpl
+import com.example.foodordering.data.repository.firebase.FCustomerRepositoryImpl
+import com.example.foodordering.data.repository.firebase.FManagerRepositoryImpl
 import com.example.foodordering.domain.repository.AuthRepository
 import com.example.foodordering.domain.repository.CustomerRepository
 import com.example.foodordering.domain.repository.ManagerRepository
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,21 +23,36 @@ object AppModule {
         FirebaseDatabase.getInstance().reference
     }
 
+    private val storage by lazy {
+        FirebaseStorage.getInstance().reference
+    }
+
     fun provideDatabase() = database
 
     @Provides
     @Singleton
     fun provideAuthRepository(): AuthRepository {
-        return AuthRepositoryImpl(RetrofitClient.getApiService())
+        return FAuthRepositoryImpl()
     }
 
     @Provides
     @Singleton
     fun provideCustomerRepository(): CustomerRepository {
-        return CustomerRepositoryImpl(RetrofitClient.getApiServiceWithToken())
+        return FCustomerRepositoryImpl(provideDatabase())
     }
 
     fun provideManagerRepository(): ManagerRepository {
-        return ManagerRepositoryImpl()
+        return FManagerRepositoryImpl(provideDatabase(), provideStorage())
     }
+
+    fun provideStorage() = storage
+
+    private lateinit var applicationContext: Context
+
+    fun setContext(context: Context) {
+        applicationContext = context
+    }
+
+    fun provideContext(): Context = applicationContext
+
 }

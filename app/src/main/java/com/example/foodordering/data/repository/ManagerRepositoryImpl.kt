@@ -1,5 +1,6 @@
 package com.example.foodordering.data.repository
 
+import android.net.Uri
 import com.example.foodordering.di.AppModule
 import com.example.foodordering.domain.model.Bill
 import com.example.foodordering.domain.model.Food
@@ -11,53 +12,25 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CountDownLatch
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class ManagerRepositoryImpl : ManagerRepository {
-
-    private val database = AppModule.provideDatabase()
-
     override suspend fun getFoods(): AppResource<List<Food>> {
-        return withContext(Dispatchers.IO) {
-            suspendCancellableCoroutine { continuation ->
-                val dataRef = database.child("food")
-                dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val foodList = mutableListOf<Food>()
-                        for (foodSnapshot in dataSnapshot.children) {
-                            val food = foodSnapshot.getValue(Food::class.java)
-                            food?.let { foodList.add(it) }
-                        }
-                        continuation.resume(AppResource.Success(foodList))
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        continuation.resume(AppResource.Error(databaseError.message))
-                    }
-                })
-            }
-        }
+        TODO("Not yet implemented")
     }
 
     override suspend fun getBills(): AppResource<List<Bill>> {
-        return withContext(Dispatchers.IO) {
-            suspendCancellableCoroutine { continuation ->
-                val dataRef = database.child("bill")
-                dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val billList = mutableListOf<Bill>()
-                        for (billSnapshot in snapshot.children) {
-                            val bill = billSnapshot.getValue(Bill::class.java)
-                            bill?.let { billList.add(it) }
-                        }
-                        continuation.resume(AppResource.Success(billList))
-                    }
+        TODO("Not yet implemented")
+    }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-                })
-            }
-        }
+    override suspend fun addFood(food: Food, imageList: List<Uri?>): AppResource<Food> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun uploadImagesSuspend(imageList: List<Uri?>, name: String): List<String> {
+        TODO("Not yet implemented")
     }
 }

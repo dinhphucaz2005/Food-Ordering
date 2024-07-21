@@ -8,13 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodordering.di.AppModule
 import com.example.foodordering.domain.model.CartItem
 import com.example.foodordering.domain.model.Food
+import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.internal.concurrent.formatDuration
 
-class CartViewModel : ViewModel() {
-
-    private val database = AppModule.provideDatabase()
+class CartViewModel(
+    private val database: DatabaseReference = AppModule.provideDatabase()
+) : ViewModel() {
 
     val cart = mutableStateListOf<CartItem>()
 
@@ -46,7 +47,7 @@ class CartViewModel : ViewModel() {
             )
 
             data class Bill(
-                val total: Long,
+                val total: Int,
                 val time: String,
                 var cart: List<FirebaseCartItem>
             )

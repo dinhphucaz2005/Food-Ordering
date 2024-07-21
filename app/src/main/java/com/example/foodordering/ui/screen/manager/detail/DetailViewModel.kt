@@ -22,18 +22,6 @@ class DetailViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            listFoodState.clear()
-            when (val result = repository.getFoods()) {
-                is AppResource.Success -> {
-                    result.data?.let {
-                        listFoodState.addAll(it)
-                    }
-                }
-
-                else -> {
-                    //TODO("handle error")
-                }
-            }
         }
     }
 

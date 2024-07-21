@@ -12,39 +12,52 @@ class RegisterViewModel : ViewModel() {
 
     private val repository = AppModule.provideAuthRepository()
 
-    val username = mutableStateOf("")
-    val password = mutableStateOf("")
-    val phoneNumber = mutableStateOf("")
-    val email = mutableStateOf("")
+    val username = mutableStateOf("dinhphucaz52")
+    val password = mutableStateOf("00000000")
+    val phoneNumber = mutableStateOf("0987654321")
+    val email = mutableStateOf("dinhphucaz52@gmail.com")
+
+//    val username = mutableStateOf("")
+//    val password = mutableStateOf("")
+//    val phoneNumber = mutableStateOf("")
+//    val email = mutableStateOf("")
+
     val registerSuccess = mutableStateOf(false)
+    val isLoading = mutableStateOf(false)
 
-    private var errorMessage: String = ""
-
-    fun getErrorMessage(): String {
-        return errorMessage
-    }
+    var registerMessage = mutableStateOf("")
 
     fun register() {
         viewModelScope.launch {
 
             if (
-                AuthHelper.validateEmail(email.value) &&
-                AuthHelper.validatePassword(password.value) &&
-                AuthHelper.validatePhoneNumber(phoneNumber.value) &&
-                AuthHelper.validateUsername(username.value)
-            )
+                AuthHelper.isInvalidEmail(email.value) &&
+                AuthHelper.isInvalidPassword(password.value) &&
+                AuthHelper.isInvalidPhoneNumber(phoneNumber.value) &&
+                AuthHelper.isInvalidUsername(username.value)
+            ) {
+                isLoading.value = false
+                registerMessage.value = "Invalid input"
                 return@launch
+            }
+
+            isLoading.value = true
 
             val result =
                 repository.register(username.value, email.value, password.value, phoneNumber.value)
 
-            if (result is AppResource.Success) {
-                registerSuccess.value = true
-            } else {
-                errorMessage = (result as AppResource.Error).error
+            when (result) {
+                is AppResource.Success -> {
+                    registerSuccess.value = true
+                    registerMessage.value = "Register success"
+                }
+
+                is AppResource.Error -> {
+                    registerMessage.value = result.error
+                }
             }
-
+            isLoading.value = false
         }
-    }
 
+    }
 }
