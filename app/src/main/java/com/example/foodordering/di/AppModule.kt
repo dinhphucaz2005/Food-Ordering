@@ -45,7 +45,7 @@ object AppModule {
         return FManagerRepositoryImpl(provideDatabase(), provideStorage())
     }
 
-    fun provideStorage() = storage
+    private fun provideStorage() = storage
 
     private lateinit var applicationContext: Context
 

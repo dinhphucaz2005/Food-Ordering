@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foodordering.di.AppModule
+import com.example.foodordering.di.UserTemp
 import com.example.foodordering.util.AppResource
 import com.example.foodordering.util.AuthHelper
 import kotlinx.coroutines.delay
@@ -36,6 +37,7 @@ class LoginViewModel
                 is AppResource.Success -> {
                     val userDTO = result.data
                     if (userDTO != null) {
+                        UserTemp.id = userDTO.token.toString()
                         loginSuccess.value = true
                     }
                 }

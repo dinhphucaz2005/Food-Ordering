@@ -23,6 +23,10 @@ class FManagerRepositoryImpl(
     private val storage: StorageReference,
 ) : ManagerRepository {
 
+    companion object {
+        const val REMOVE_SUCCESS_MESSAGE = "Food removed successfully"
+    }
+
     override suspend fun getFoods(): AppResource<List<Food>> {
         return suspendCoroutine { continuation ->
             val dataRef = database.child(FirebaseChild.FOOD)
@@ -65,7 +69,7 @@ class FManagerRepositoryImpl(
 
     override suspend fun addFood(food: Food, imageList: List<Uri?>): AppResource<Food> {
 
-
+        {
 //        val foodList = mutableListOf(
 //            Food(
 //                id = "0xFF54cbcd",
@@ -204,6 +208,7 @@ class FManagerRepositoryImpl(
 //                    }
 //            }
 //        }
+        }
 
         return suspendCoroutine { continuation ->
             CoroutineScope(Dispatchers.IO).launch {
@@ -218,6 +223,19 @@ class FManagerRepositoryImpl(
                             ?.let { continuation.resume(it) }
                     }
             }
+        }
+    }
+
+    override suspend fun removeFood(foodId: String): AppResource<String> {
+        return suspendCoroutine { continuation ->
+            val foodRef = database.child(FirebaseChild.FOOD).child(foodId)
+            foodRef.removeValue()
+                .addOnSuccessListener {
+                    continuation.resume(AppResource.Success(REMOVE_SUCCESS_MESSAGE))
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(AppResource.Error(exception.message.toString()))
+                }
         }
     }
 

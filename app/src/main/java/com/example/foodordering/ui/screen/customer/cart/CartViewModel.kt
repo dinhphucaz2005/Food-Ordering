@@ -1,17 +1,18 @@
 package com.example.foodordering.ui.screen.customer.cart
 
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foodordering.di.AppModule
+import com.example.foodordering.di.UserTemp
+import com.example.foodordering.domain.model.Bill
 import com.example.foodordering.domain.model.CartItem
+import com.example.foodordering.domain.model.CartItemDTO
 import com.example.foodordering.domain.model.Food
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.concurrent.formatDuration
 
 class CartViewModel(
     private val database: DatabaseReference = AppModule.provideDatabase()
@@ -41,24 +42,17 @@ class CartViewModel(
 
     fun checkout() {
         viewModelScope.launch {
-            data class FirebaseCartItem(
-                val idProduct: String,
-                val quantity: Int
-            )
-
-            data class Bill(
-                val total: Int,
-                val time: String,
-                var cart: List<FirebaseCartItem>
-            )
-
-            val newBill = Bill(
-                cart.sumOf { it.food.price * it.quantity },
-                "${System.currentTimeMillis()}",
-                cart.map { FirebaseCartItem(it.food.id, it.quantity) }
-            )
             inProgress.value = true
             delay(2000)
+            val newBill = Bill(
+                id = "${System.currentTimeMillis()}",
+                userId = UserTemp.id,
+                time = System.currentTimeMillis(),
+                total = cart.sumOf { it.food.price * it.quantity },
+                cart = cart.map {
+                    CartItemDTO(it.food.id, it.quantity)
+                }
+            )
             database.child("bill").child("${System.currentTimeMillis()}")
                 .setValue(newBill)
                 .addOnSuccessListener {

@@ -116,33 +116,38 @@ fun TempScreen(
                     .weight(1f),
                 painterResource(id = R.drawable.main2),
                 color = DarkColorScheme.primary,
-                text = "Chef"
-            )
-        }
-
-        Row(
-            modifier = Modifier.height(250.dp)
-        ) {
-            Item(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-                painterResource(id = R.drawable.main3),
-                color = DarkColorScheme.primary,
-                text = "Cashier"
-            )
-            Item(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-                painterResource(id = R.drawable.main4),
-                color = DarkColorScheme.primary,
                 text = "Customer",
                 navigate = {
                     navigateToCustomer()
                 }
             )
         }
+
+//            Row(
+//                modifier = Modifier.height(250.dp)
+//            ) {
+//                Item(
+//                    modifier = Modifier
+//                        .fillMaxHeight()
+//                        .weight(1f),
+//                    painterResource(id = R.drawable.main3),
+//                    color = DarkColorScheme.primary,
+//                    text = "Cashier"
+//                )
+//                Item(
+//                    modifier = Modifier
+//                        .fillMaxHeight()
+//                        .weight(1f),
+//                    painterResource(id = R.drawable.main4),
+//                    color = DarkColorScheme.primary,
+//                    text = "Customer",
+//                    navigate = {
+//                        navigateToCustomer()
+//                    }
+//                )
+//            }
+//        }
+
 
     }
 }

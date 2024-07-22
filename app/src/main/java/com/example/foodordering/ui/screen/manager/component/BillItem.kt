@@ -31,10 +31,11 @@ import com.example.foodordering.R
 import com.example.foodordering.di.FakeData
 import com.example.foodordering.domain.model.Bill
 import com.example.foodordering.ui.theme.Background
+import com.example.foodordering.util.TimeHelper
 
 
 @Composable
-fun Item(modifier: Modifier = Modifier, bill: Bill = FakeData.provideBills()[0]) {
+fun BillItem(modifier: Modifier = Modifier, bill: Bill = FakeData.provideBills()[0]) {
     ConstraintLayout(
         modifier = modifier
             .background(
@@ -64,7 +65,7 @@ fun Item(modifier: Modifier = Modifier, bill: Bill = FakeData.provideBills()[0])
         val idInvoice = createRef()
 
         Text(
-            text = "${bill.time}",
+            text = TimeHelper.convertToDateTime(bill.time),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.constrainAs(idInvoice) {
                 start.linkTo(img.end, margin = 10.dp)
@@ -134,7 +135,7 @@ fun BillRecyclerView(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         itemsIndexed(bills) { _, item ->
-            Item(modifier = Modifier.clickable { onItemClick(item) }, bill = item)
+            BillItem(modifier = Modifier.clickable { onItemClick(item) }, bill = item)
         }
     }
 }

@@ -117,7 +117,6 @@ fun ManagerNavigation() {
                 )
             },
             topBar = {
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

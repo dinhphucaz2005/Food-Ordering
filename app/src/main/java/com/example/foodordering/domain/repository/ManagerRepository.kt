@@ -13,5 +13,7 @@ interface ManagerRepository {
 
     suspend fun addFood(food: Food, imageList: List<Uri?>): AppResource<Food>
 
+    suspend fun removeFood(foodId: String): AppResource<String>
+
     suspend fun uploadImagesSuspend(imageList: List<Uri?>, name: String): List<String>
 }

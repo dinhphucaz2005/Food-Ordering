@@ -1,7 +1,6 @@
 package com.example.foodordering.domain.model
 
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 data class CartItemDTO(
     val foodId: String,
@@ -14,13 +13,17 @@ data class CartItemDTO(
 }
 
 data class Bill(
-    val time: String,
-    val total: Long,
+    val id: String,
+    val userId: String,
+    val time: Long,
+    val total: Int,
     val cart: List<CartItemDTO>
 ) {
     constructor() : this(
-        time = "System.currentTimeMillis()",
-        total = (Random.nextInt(1, 5) * 1000).toLong(),
+        id = "",
+        userId = "",
+        time = System.currentTimeMillis(),
+        total = (Random.nextInt(1, 5) * 1000),
         cart = emptyList()
     )
 }
