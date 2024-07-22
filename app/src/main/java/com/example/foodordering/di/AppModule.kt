@@ -10,7 +10,7 @@ import com.example.foodordering.domain.repository.ManagerRepository
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
-import dagger.Provides
+import dagger.Provides 
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton

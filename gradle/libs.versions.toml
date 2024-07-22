@@ -3,7 +3,7 @@ agp = "8.5.1"
 coilCompose = "3.0.0-alpha06"
 constraintlayoutCompose = "1.0.1"
 converterGson = "2.11.0"
-hiltAndroidCompiler = "2.47"
+hiltAndroidCompiler = "2.49"
 hiltAndroidVersion = "2.49"
 hiltNavigationCompose = "1.2.0"
 hiltNavigationComposeVersion = "1.2.0"
@@ -29,6 +29,7 @@ googleGmsGoogleServices = "4.4.2"
 firebaseDatabase = "21.0.0"
 firebaseAuth = "23.0.0"
 firebaseStorage = "21.0.0"
+
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }

@@ -1,5 +1,6 @@
 package com.example.foodordering.ui.screen.customer.authentication.register
 
+
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -40,12 +41,12 @@ import com.example.foodordering.R
 import com.example.foodordering.ui.component.MyTextField
 import com.example.foodordering.ui.screen.splash.WaitingScreen
 import com.example.foodordering.ui.theme.Background
-import com.example.foodordering.ui.theme.DarkColorScheme
 import com.example.foodordering.ui.theme.TextColor
 
+@Preview
 @Composable
 fun RegisterScreen(
-    onRegisterSuccess: () -> Unit,
+    onRegisterSuccess: () -> Unit = {},
     viewModel: RegisterViewModel = viewModel(),
 ) {
 
@@ -173,7 +174,6 @@ fun RegisterScreen(
             onRegisterSuccess()
         }
     }
-
     if (viewModel.isLoading.value) {
         WaitingScreen()
     }
@@ -190,5 +190,4 @@ fun RegisterScreen(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun LoginScreenDarkPreview() {
     RegisterScreen({})
-
 }

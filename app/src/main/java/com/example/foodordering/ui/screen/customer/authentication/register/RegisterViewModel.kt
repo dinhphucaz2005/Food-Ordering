@@ -26,7 +26,6 @@ class RegisterViewModel : ViewModel() {
     val isLoading = mutableStateOf(false)
 
     var registerMessage = mutableStateOf("")
-
     fun register() {
         viewModelScope.launch {
 
@@ -58,6 +57,5 @@ class RegisterViewModel : ViewModel() {
             }
             isLoading.value = false
         }
-
     }
 }

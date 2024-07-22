@@ -7,7 +7,6 @@ import com.example.foodordering.di.AppModule
 import com.example.foodordering.di.UserTemp
 import com.example.foodordering.util.AppResource
 import com.example.foodordering.util.AuthHelper
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 //@HiltViewModel

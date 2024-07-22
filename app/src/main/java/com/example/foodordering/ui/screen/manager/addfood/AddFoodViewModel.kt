@@ -10,6 +10,7 @@ import com.example.foodordering.util.AppResource
 import com.example.foodordering.util.FoodHelper
 import kotlinx.coroutines.launch
 
+
 class AddFoodViewModel : ViewModel() {
 
     companion object {
@@ -20,13 +21,11 @@ class AddFoodViewModel : ViewModel() {
     }
 
     private val repository = AppModule.provideManagerRepository()
-
     val imageListState = mutableStateOf<List<Uri?>>(emptyList())
     val nameState = mutableStateOf("test")
     val priceState = mutableStateOf("500")
 
     var message = mutableStateOf("")
-
 
     private var isAddFoodLoading = false
     fun addFood() {
