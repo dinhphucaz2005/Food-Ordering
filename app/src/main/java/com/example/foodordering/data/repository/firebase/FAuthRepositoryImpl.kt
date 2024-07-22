@@ -4,6 +4,7 @@ import com.example.foodordering.data.dto.UserDTO
 import com.example.foodordering.domain.repository.AuthRepository
 import com.example.foodordering.util.AppResource
 import com.google.firebase.auth.FirebaseAuth
+import okhttp3.internal.notify
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -21,7 +22,7 @@ class FAuthRepositoryImpl : AuthRepository {
                             name = user.displayName,
                             email = user.email,
                             phoneNumber = user.phoneNumber,
-                            token = user.uid
+                            id = user.uid
                         )
                         continuation.resume(AppResource.Success(userDTO))
                     } else {
@@ -36,7 +37,7 @@ class FAuthRepositoryImpl : AuthRepository {
     }
 
     override suspend fun register(
-        name: String,
+        username: String,
         email: String,
         password: String,
         phoneNumber: String
@@ -47,10 +48,10 @@ class FAuthRepositoryImpl : AuthRepository {
                     val user = authResult.user
                     if (user != null) {
                         val userDTO = UserDTO(
-                            name = name,
-                            email = email,
-                            phoneNumber = phoneNumber,
-                            token = user.uid
+                            id = user.uid,
+                            name = user.displayName,
+                            email = user.email,
+                            phoneNumber = user.phoneNumber,
                         )
                         continuation.resume(AppResource.Success(userDTO))
                     } else {

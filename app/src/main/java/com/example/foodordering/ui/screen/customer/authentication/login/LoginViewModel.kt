@@ -16,7 +16,7 @@ class LoginViewModel
 
     private val repository = AppModule.provideAuthRepository()
 
-    var username = mutableStateOf("dinhphucaz52@gmail.com")
+    var email = mutableStateOf("dinhphucaz52@gmail.com")
     var password = mutableStateOf("00000000")
     var isLoginLoading = mutableStateOf(false)
     var loginSuccess = mutableStateOf(false)
@@ -24,19 +24,18 @@ class LoginViewModel
 
     fun login() {
         viewModelScope.launch {
-            if (AuthHelper.isInvalidEmail(username.value) &&
+            if (AuthHelper.isInvalidEmail(email.value) &&
                 AuthHelper.isInvalidPassword(password.value)
             )
                 return@launch
             if (isLoginLoading.value)
                 return@launch
             isLoginLoading.value = true
-            delay(1000)
-            when (val result = repository.login(username.value, password.value)) {
+            when (val result = repository.login(email.value, password.value)) {
                 is AppResource.Success -> {
                     val userDTO = result.data
                     if (userDTO != null) {
-                        UserTemp.id = userDTO.token.toString()
+                        UserTemp.id = userDTO.id
                         loginSuccess.value = true
                     }
                 }

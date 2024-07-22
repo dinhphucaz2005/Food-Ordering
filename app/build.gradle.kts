@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
     alias(libs.plugins.google.gms.google.services)
 }
 
@@ -106,11 +104,6 @@ dependencies {
     //Ktor
     implementation(libs.ktor.client.okhttp)
 
-
-    //Dagger - Hilt
-    implementation(libs.hilt.android.v249)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
 
     //Navigation
     implementation(libs.androidx.hilt.navigation.compose.v110alpha01)

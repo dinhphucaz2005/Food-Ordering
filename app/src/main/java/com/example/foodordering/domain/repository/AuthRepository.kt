@@ -8,7 +8,6 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): AppResource<UserDTO>
 
     suspend fun register(
-        name: String,
         username: String,
         email: String,
         password: String,
