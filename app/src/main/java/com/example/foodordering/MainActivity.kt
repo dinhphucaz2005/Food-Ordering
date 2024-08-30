@@ -3,9 +3,11 @@ package com.example.foodordering
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.foodordering.di.AppModule
-import com.example.foodordering.ui.navigation.PreNavigation
+import com.example.foodordering.ui.navigation.AppNavigation
+import com.example.foodordering.ui.tmpnavigation.PreNavigation
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
@@ -13,11 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            PreNavigation()
-//            CustomerNavigation()
-//            ManagerNavigation()
-//            WaitingScreen()
-//            HomeScreen()
+            AppNavigation()
         }
     }
 }

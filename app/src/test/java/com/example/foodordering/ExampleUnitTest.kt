@@ -12,6 +12,10 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        fun Int.toVND(): String {
+            val formatter = java.text.DecimalFormat("#,###")
+            return formatter.format(this) + " VND"
+        }
+        println(5000000.toVND())
     }
 }

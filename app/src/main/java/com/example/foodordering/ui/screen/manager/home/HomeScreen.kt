@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodordering.R
 import com.example.foodordering.ui.screen.manager.component.BillRecyclerView
@@ -54,7 +55,7 @@ import com.example.foodordering.ui.theme.Tertiary
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     Column(
         modifier = modifier

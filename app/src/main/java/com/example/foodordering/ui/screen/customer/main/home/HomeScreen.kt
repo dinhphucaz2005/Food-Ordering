@@ -1,8 +1,10 @@
-package com.example.foodordering.ui.screen.customer.home
+package com.example.foodordering.ui.screen.customer.main.home
 
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +15,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
@@ -37,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,36 +56,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.foodordering.R
-import com.example.foodordering.domain.model.Food
 import com.example.foodordering.ui.component.TopAppBarHome
 import com.example.foodordering.ui.screen.component.BannerSlider
-import com.example.foodordering.ui.screen.customer.cart.CartViewModel
 import com.example.foodordering.ui.screen.component.Categories
-import com.example.foodordering.ui.screen.component.FoodRecyclerView
+import com.example.foodordering.ui.screen.component.FoodItem
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.DarkColorScheme
 import com.example.foodordering.ui.theme.Tertiary
 import com.example.foodordering.ui.theme.TextColor
+import com.example.foodordering.ui.navigation.Routes
 import kotlinx.coroutines.launch
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onCheckout: () -> Unit = {},
-    viewModel: HomeViewModel = viewModel(),
-    gotoDetail: (Food) -> Unit = {},
-    cartViewModel: CartViewModel = viewModel()
+    navController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
+
+    val foods by viewModel.foods.collectAsState()
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -165,10 +168,9 @@ fun HomeScreen(
                         .aspectRatio(1f),
                     tint = Tertiary
                 )
-                val cart = cartViewModel.cart
 
                 Text(
-                    text = "$ ${cart.sumOf { it.food.price * it.quantity }}",
+                    text = "$ 5000",
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 12.dp),
@@ -178,9 +180,8 @@ fun HomeScreen(
                     color = Tertiary
                 )
                 Button(
-                    onClick = {
-                        onCheckout()
-                    }, modifier = Modifier.fillMaxHeight(),
+                    onClick = { navController.navigate(Routes.MAIN_CART) },
+                    modifier = Modifier.fillMaxHeight(),
                     shape = RectangleShape,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Tertiary
@@ -251,12 +252,27 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                val listFood = viewModel.listFoodState
+                val itemModifier = Modifier
+                    .width(200.dp)
+                    .height(250.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(Color.White)
+                    .border(width = 2.dp, color = Tertiary, shape = RoundedCornerShape(24.dp))
+                    .padding(top = 20.dp)
                 item {
-                    FoodRecyclerView(listFood, addCart = {
-                        cartViewModel.addToCart(it)
-                    }) { food ->
-                        gotoDetail(food)
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        itemsIndexed(foods) { _, food ->
+                            FoodItem(
+                                itemModifier.clickable { navController.navigate(Routes.MAIN_DETAIL + "/" + food.id) },
+                                food
+                            ) { viewModel.addCart(food.id) }
+                        }
                     }
                 }
             }

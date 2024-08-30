@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,19 +37,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.example.foodordering.di.FakeData
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.ui.screen.component.DefaultButton
 import com.example.foodordering.ui.theme.Background
 
 
-@Preview
 @Composable
 fun DetailScreen(
     modifier: Modifier = Modifier,
-    viewModel: FoodViewModel = viewModel()
+    viewModel: FoodViewModel = hiltViewModel()
 ) {
 
     val listFood = viewModel.listFoodState

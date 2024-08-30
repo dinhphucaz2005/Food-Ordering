@@ -4,14 +4,17 @@ import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foodordering.di.AppModule
 import com.example.foodordering.domain.model.Food
+import com.example.foodordering.domain.repository.ManagerRepository
 import com.example.foodordering.util.AppResource
 import com.example.foodordering.util.FoodHelper
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class AddFoodViewModel : ViewModel() {
+class AddFoodViewModel @Inject constructor(
+    private val repository: ManagerRepository
+) : ViewModel() {
 
     companion object {
         private const val TAG = "AddFoodViewModel"
@@ -20,7 +23,6 @@ class AddFoodViewModel : ViewModel() {
         const val PRICE_ERROR_MESSAGE = "Please enter a price"
     }
 
-    private val repository = AppModule.provideManagerRepository()
     val imageListState = mutableStateOf<List<Uri?>>(emptyList())
     val nameState = mutableStateOf("test")
     val priceState = mutableStateOf("500")
@@ -45,7 +47,8 @@ class AddFoodViewModel : ViewModel() {
                 FoodHelper.getIdFromFoodName(nameState.value),
                 nameState.value,
                 priceState.value.toInt(),
-                emptyList()
+                emptyList(),
+                5
             )
             when (val result = repository.addFood(food, imageListState.value)) {
                 is AppResource.Success -> {

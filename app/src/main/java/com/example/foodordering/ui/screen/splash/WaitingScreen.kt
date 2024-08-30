@@ -1,6 +1,7 @@
 package com.example.foodordering.ui.screen.splash
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -31,9 +32,8 @@ fun WaitingScreen(
     ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                color = Background
-            )
+            .background(color = Background)
+            .clickable(false, onClick = {})
     ) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animation))
 

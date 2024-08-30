@@ -3,24 +3,24 @@ package com.example.foodordering.ui.screen.customer.authentication.register
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foodordering.di.AppModule
+import com.example.foodordering.domain.repository.AuthRepository
 import com.example.foodordering.util.AppResource
 import com.example.foodordering.util.AuthHelper
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RegisterViewModel : ViewModel() {
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val repository: AuthRepository
+) : ViewModel() {
 
-    private val repository = AppModule.provideAuthRepository()
-
-    val username = mutableStateOf("dinhphucaz52")
+    val name = mutableStateOf("dinhphucaz52")
     val password = mutableStateOf("00000000")
     val phoneNumber = mutableStateOf("0987654321")
     val email = mutableStateOf("dinhphucaz52@gmail.com")
+    val address = mutableStateOf("Ho Chi Minh City")
 
-//    val username = mutableStateOf("")
-//    val password = mutableStateOf("")
-//    val phoneNumber = mutableStateOf("")
-//    val email = mutableStateOf("")
 
     val registerSuccess = mutableStateOf(false)
     val isLoading = mutableStateOf(false)
@@ -33,7 +33,7 @@ class RegisterViewModel : ViewModel() {
                 AuthHelper.isInvalidEmail(email.value) &&
                 AuthHelper.isInvalidPassword(password.value) &&
                 AuthHelper.isInvalidPhoneNumber(phoneNumber.value) &&
-                AuthHelper.isInvalidUsername(username.value)
+                AuthHelper.isInvalidUsername(name.value)
             ) {
                 isLoading.value = false
                 registerMessage.value = "Invalid input"
@@ -43,7 +43,12 @@ class RegisterViewModel : ViewModel() {
             isLoading.value = true
 
             val result =
-                repository.register(username.value, email.value, password.value, phoneNumber.value)
+                repository.register(
+                    name = name.value,
+                    password = password.value,
+                    phoneNumber = phoneNumber.value,
+                    email = email.value,
+                )
 
             when (result) {
                 is AppResource.Success -> {

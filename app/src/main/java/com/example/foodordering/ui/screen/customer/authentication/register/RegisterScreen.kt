@@ -1,7 +1,6 @@
 package com.example.foodordering.ui.screen.customer.authentication.register
 
 
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -26,28 +26,26 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.foodordering.R
 import com.example.foodordering.ui.component.MyTextField
 import com.example.foodordering.ui.screen.splash.WaitingScreen
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.TextColor
 
-@Preview
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit = {},
-    viewModel: RegisterViewModel = viewModel(),
+    navController: NavHostController = NavHostController(LocalContext.current),
+    viewModel: RegisterViewModel = hiltViewModel(),
 ) {
 
     ConstraintLayout(
@@ -71,7 +69,6 @@ fun RegisterScreen(
                     end.linkTo(parent.end)
                 }
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,17 +85,6 @@ fun RegisterScreen(
                 ),
             verticalArrangement = Arrangement.Center
         ) {
-
-            MyTextField(
-                state = viewModel.username,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
-                labelString = "Username",
-                icon = Icons.Default.Person
-            )
-
-
             MyTextField(
                 state = viewModel.email,
                 modifier = Modifier
@@ -106,6 +92,15 @@ fun RegisterScreen(
                     .padding(bottom = 10.dp),
                 labelString = "Email",
                 icon = Icons.Default.Email
+            )
+
+            MyTextField(
+                state = viewModel.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                labelString = "Name",
+                icon = Icons.Default.Person
             )
 
             MyTextField(
@@ -126,7 +121,14 @@ fun RegisterScreen(
                 icon = Icons.Default.Phone
             )
 
-
+            MyTextField(
+                state = viewModel.address,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                labelString = "Address",
+                icon = Icons.Default.LocationOn
+            )
 
             Button(
                 onClick = {
@@ -183,11 +185,4 @@ fun RegisterScreen(
             Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
         }
     }
-
-}
-
-@Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-fun LoginScreenDarkPreview() {
-    RegisterScreen({})
 }

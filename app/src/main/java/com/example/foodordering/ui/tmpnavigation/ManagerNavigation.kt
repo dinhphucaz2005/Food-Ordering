@@ -1,4 +1,4 @@
-package com.example.foodordering.ui.navigation
+package com.example.foodordering.ui.tmpnavigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,7 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,11 +38,8 @@ import com.example.foodordering.ui.screen.manager.ManagerRoutes
 import com.example.foodordering.ui.screen.manager.addfood.AddFood
 import com.example.foodordering.ui.screen.manager.addfood.AddFoodViewModel
 import com.example.foodordering.ui.screen.manager.detail.DetailScreen
-import com.example.foodordering.ui.screen.manager.help.HelpScreen
 import com.example.foodordering.ui.screen.manager.home.HomeScreen
 import com.example.foodordering.ui.screen.manager.home.ManagerDrawer
-import com.example.foodordering.ui.screen.manager.setting.SettingScreen
-import com.example.foodordering.ui.screen.manager.statistic.StatisticScreen
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
 import kotlinx.coroutines.launch
@@ -50,9 +47,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ManagerNavigation() {
+fun ManagerNavigation(
+    addFoodViewModel: AddFoodViewModel = hiltViewModel()
+) {
 
-    val addFoodViewModel: AddFoodViewModel = viewModel()
 
     val navController = rememberNavController()
 
@@ -170,27 +168,9 @@ fun ManagerNavigation() {
                                 .fillMaxSize()
                         )
                     }
-                    composable(ManagerRoutes.STATISTIC) {
-                        StatisticScreen(
-                            modifier = Modifier
-                                .padding(contentPadding)
-                                .fillMaxSize()
-                        )
-                    }
-                    composable(ManagerRoutes.SETTING) {
-                        SettingScreen(
-                            modifier = Modifier
-                                .padding(contentPadding)
-                                .fillMaxSize()
-                        )
-                    }
-                    composable(ManagerRoutes.HELP) {
-                        HelpScreen(
-                            modifier = Modifier
-                                .padding(contentPadding)
-                                .fillMaxSize()
-                        )
-                    }
+                    composable(ManagerRoutes.STATISTIC) {}
+                    composable(ManagerRoutes.SETTING) { }
+                    composable(ManagerRoutes.HELP) { }
                 }
             }
         )

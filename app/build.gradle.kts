@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -49,6 +51,7 @@ android {
     }
 }
 
+//noinspection UseTomlInstead
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -98,13 +101,21 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     //Coil
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.ktor)
-
-    //Ktor
-    implementation(libs.ktor.client.okhttp)
+    implementation("io.coil-kt:coil-compose:2.1.0")
 
 
-    //Navigation
-    implementation(libs.androidx.hilt.navigation.compose.v110alpha01)
+    //Material Icons Extended
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+
+    //Nav animation
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.32.0")
+
+    //EventBus
+    implementation("org.greenrobot:eventbus:3.3.1")
+
+    //Dagger-Hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 }

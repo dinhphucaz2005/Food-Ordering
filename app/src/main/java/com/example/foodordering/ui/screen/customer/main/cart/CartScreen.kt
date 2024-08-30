@@ -1,4 +1,4 @@
-package com.example.foodordering.ui.screen.customer.cart
+package com.example.foodordering.ui.screen.customer.main.cart
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -33,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,21 +51,64 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.rememberAsyncImagePainter
+import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.foodordering.R
+import com.example.foodordering.data.dto.CartDTO
+import com.example.foodordering.data.dto.FoodDTO
+import com.example.foodordering.domain.repository.CustomerRepository
+import com.example.foodordering.extension.toVND
+import com.example.foodordering.ui.navigation.Routes
 import com.example.foodordering.ui.screen.splash.WaitingScreen
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
 import com.example.foodordering.ui.theme.TextColor
+import com.example.foodordering.util.AppResource
 
 @Preview
 @Composable
+fun Preview() {
+    CartScreen(
+        NavHostController(LocalContext.current), CartViewModel(object : CustomerRepository {
+            override suspend fun getFoods(): AppResource<List<FoodDTO>> {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun addCart(productId: String): AppResource<CartDTO> {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun getFoodById(id: String): FoodDTO {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun getCart(): AppResource<CartDTO> {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun updateCart(
+                foodId: String,
+                cartId: String,
+                quantity: Int
+            ): AppResource<*> {
+                TODO("Not yet implemented")
+            }
+        })
+    )
+}
+
+
+@Composable
 fun CartScreen(
-    viewModel: CartViewModel = viewModel(),
-    popBackStack: () -> Unit = {}
+    navController: NavHostController,
+    viewModel: CartViewModel = hiltViewModel(),
 ) {
-    val cart = viewModel.cart
+    val cart by viewModel.cart.collectAsState()
+    val isUpdatedCart by viewModel.isUpdatedCart.collectAsState()
+    val inProgress by viewModel.inProgress.collectAsState()
 
     Column(
         modifier = Modifier
@@ -84,7 +128,7 @@ fun CartScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { popBackStack() }) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     modifier = Modifier.size(32.dp, 32.dp),
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -119,129 +163,115 @@ fun CartScreen(
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                itemsIndexed(cart) { index, cartItem ->
-                    ConstraintLayout(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(70.dp)
-                            .background(
-                                Color.White
-                            )
-                    ) {
-                        val imageRef = createRef()
+                cart?.let {
+                    itemsIndexed(it.foods) { _, food ->
+                        ConstraintLayout(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(70.dp)
+                                .background(
+                                    Color.White
+                                )
+                        ) {
+                            val imageRef = createRef()
 
-                        Image(modifier = Modifier
-                            .constrainAs(imageRef) {
-                                start.linkTo(parent.start)
-                            }
-                            .fillMaxHeight()
-                            .aspectRatio(1f),
-                            painter = rememberAsyncImagePainter(model = cartItem.food.gallery[0]),
-                            contentDescription = "",
-                            contentScale = ContentScale.Crop)
+                            Image(modifier = Modifier
+                                .constrainAs(imageRef) {
+                                    start.linkTo(parent.start)
+                                }
+                                .fillMaxHeight()
+                                .aspectRatio(1f),
+                                painter = rememberAsyncImagePainter(model = food.gallery[0]),
+                                contentDescription = "",
+                                contentScale = ContentScale.Crop)
 
-                        val rowRef = createRef()
+                            val rowRef = createRef()
 
-                        Row(modifier = Modifier
-                            .constrainAs(rowRef) {
-                                bottom.linkTo(parent.bottom)
-                                end.linkTo(parent.end)
-                            }
-                            .wrapContentHeight()
-                            .wrapContentWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Background)
-                            .padding(4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Tertiary)
-                                    .size(32.dp, 32.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                IconButton(onClick = {
-                                    viewModel.removeFromCart(index)
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_baseline_minimize_24),
-                                        contentDescription = "",
-                                        modifier = Modifier.padding(bottom = 10.dp),
-                                        tint = Color.White
-                                    )
+                            Row(modifier = Modifier
+                                .constrainAs(rowRef) {
+                                    bottom.linkTo(parent.bottom)
+                                    end.linkTo(parent.end)
+                                }
+                                .wrapContentHeight()
+                                .wrapContentWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Background)
+                                .padding(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween) {
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(Tertiary)
+                                        .size(32.dp, 32.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    IconButton(onClick = {
+                                        viewModel.removeCart(food.id)
+                                    }) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.ic_baseline_minimize_24),
+                                            contentDescription = "",
+                                            modifier = Modifier.padding(bottom = 10.dp),
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+
+                                Text(
+                                    text = "${food.quantity}",
+                                    color = Tertiary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp,
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                )
+
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(Tertiary)
+                                        .size(32.dp, 32.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    IconButton(onClick = {
+                                        viewModel.addCart(food.id)
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Add,
+                                            contentDescription = "",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(20.dp, 20.dp)
+                                        )
+                                    }
                                 }
                             }
 
-                            Text(
-                                text = "${cartItem.quantity}",
-                                color = Tertiary,
+                            val priceRef = createRef()
+
+                            Text(text = "$ ${food.price.toVND()}",
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            )
+                                color = TextColor,
+                                modifier = Modifier.constrainAs(priceRef) {
+                                    top.linkTo(rowRef.top)
+                                    bottom.linkTo(parent.bottom)
+                                    start.linkTo(imageRef.end, margin = 8.dp)
+                                })
 
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Tertiary)
-                                    .size(32.dp, 32.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                IconButton(onClick = {
-                                    viewModel.addToCart(index)
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Add,
-                                        contentDescription = "",
-                                        tint = Color.White,
-                                        modifier = Modifier.size(20.dp, 20.dp)
-                                    )
-                                }
-                            }
+                            val foodRef = createRef()
+
+                            Text(text = food.name,
+                                fontSize = 16.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.constrainAs(foodRef) {
+                                    top.linkTo(parent.top, margin = 8.dp)
+                                    start.linkTo(priceRef.start)
+                                    end.linkTo(parent.end)
+                                    width = Dimension.fillToConstraints
+                                })
+
                         }
-
-
-                        val priceRef = createRef()
-
-                        Text(text = "$ ${cartItem.food.price}",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = TextColor,
-                            modifier = Modifier.constrainAs(priceRef) {
-                                top.linkTo(rowRef.top)
-                                bottom.linkTo(parent.bottom)
-                                start.linkTo(imageRef.end, margin = 8.dp)
-                            })
-
-
-                        val quantityRef = createRef()
-
-                        Text(
-                            text = "Quantity:",
-                            modifier = Modifier.constrainAs(
-                                quantityRef
-                            ) {
-                                top.linkTo(rowRef.top)
-                                bottom.linkTo(parent.bottom)
-                                start.linkTo(priceRef.end, margin = 8.dp)
-                            },
-                            fontWeight = FontWeight.Bold,
-                            color = TextColor,
-                            fontSize = 16.sp,
-                        )
-
-                        val foodRef = createRef()
-
-                        Text(text = cartItem.food.name,
-                            fontSize = 16.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.constrainAs(foodRef) {
-                                top.linkTo(parent.top, margin = 8.dp)
-                                start.linkTo(priceRef.start)
-                            })
-
                     }
                 }
             }
@@ -254,20 +284,6 @@ fun CartScreen(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 120.dp)
-            ) {
-                itemsIndexed(cart) { _, cartItem ->
-                    PriceDetailItem(
-                        text = cartItem.food.name,
-                        text2 = "${cartItem.quantity} x ${cartItem.food.price} " +
-                                "= ${cartItem.food.price * cartItem.quantity}"
-                    )
-                }
-            }
 
             HorizontalDivider(thickness = 2.dp)
 
@@ -282,7 +298,7 @@ fun CartScreen(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = "$ ${cart.sumOf { it.food.price * it.quantity }}",
+                    text = cart?.totalPrice.toVND(),
                     fontSize = 16.sp,
                     color = Tertiary,
                     fontWeight = FontWeight.Bold,
@@ -291,9 +307,7 @@ fun CartScreen(
             }
 
             Button(
-                onClick = {
-                    viewModel.checkout()
-                },
+                onClick = { viewModel.updateCart()},
                 colors = ButtonDefaults.buttonColors(containerColor = Tertiary),
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp, top = 12.dp)
@@ -316,11 +330,12 @@ fun CartScreen(
         }
     }
 
-    val inProgress = viewModel.inProgress
 
-    if (inProgress.value) {
+    if (inProgress) {
         WaitingScreen()
     }
+    if (isUpdatedCart)
+        navController.navigate(Routes.MAIN_CONFIRM)
 
 }
 
@@ -385,30 +400,5 @@ fun ApplyCoupon(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun PriceDetailItem(
-    modifier: Modifier = Modifier, text: String = "Lasagna", text2: String = "0 x 5000"
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(30.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            color = TextColor,
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            text = text2,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp, color = TextColor
-        )
     }
 }

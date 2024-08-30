@@ -19,39 +19,44 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.foodordering.R
 import com.example.foodordering.ui.component.MyTextField
 import com.example.foodordering.ui.screen.splash.WaitingScreen
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
 import com.example.foodordering.ui.theme.TextColor
+import com.example.foodordering.ui.navigation.Routes
 
 @Preview
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit = {},
-    navigateRegister: () -> Unit = {},
-    viewModel: LoginViewModel = viewModel(),
+    navController: NavHostController = NavHostController(LocalContext.current),
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    var email by remember { mutableStateOf("dinh.phuc.17.5.25@gmail.com") }
+    var password by remember { mutableStateOf("00000000") }
 
-    when (viewModel.loginSuccess.value) {
-        true -> onLoginSuccess()
-        else -> {
-            //TODO("show error message")
-        }
+    val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    if (isLoginSuccess) {
+        navController.navigate(Routes.MAIN)
     }
-
-    val loading = viewModel.isLoginLoading
 
     ConstraintLayout(
         modifier = Modifier
@@ -91,28 +96,28 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
+            val textFieldModifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+
             MyTextField(
-                state = viewModel.email,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
-                labelString = "Username/Email",
+                modifier = textFieldModifier,
+                value = email,
+                onValueChange = { email = it },
+                label = "Email",
                 icon = Icons.Default.Email
             )
 
             MyTextField(
-                state = viewModel.password,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
-                labelString = "Password",
+                modifier = textFieldModifier,
+                value = password,
+                onValueChange = { password = it },
+                label = "Password",
                 icon = Icons.Default.Lock
             )
 
             Button(
-                onClick = {
-                    viewModel.login()
-                },
+                onClick = { viewModel.login(email, password) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
                 ),
@@ -129,11 +134,8 @@ fun LoginScreen(
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
-
             Button(
-                onClick = {
-                    navigateRegister()
-                },
+                onClick = { navController.navigate(Routes.AUTH_REGISTER) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Tertiary
                 ),
@@ -175,10 +177,9 @@ fun LoginScreen(
                     )
                 }
             }
-
         }
 
-        if (loading.value) {
+        if (isLoading) {
             WaitingScreen()
         }
     }

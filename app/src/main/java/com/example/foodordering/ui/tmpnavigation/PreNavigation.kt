@@ -1,4 +1,4 @@
-package com.example.foodordering.ui.navigation
+package com.example.foodordering.ui.tmpnavigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

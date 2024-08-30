@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.foodordering.ui.component
 
 import android.annotation.SuppressLint
@@ -75,5 +77,44 @@ fun MyTextField(
     )
 }
 
+
+@Composable
+fun MyTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String = "",
+    icon: ImageVector? = null,
+) {
+    TextField(
+        singleLine = true,
+        value = value,
+        leadingIcon = {
+            icon?.let {
+                Icon(
+                    imageVector = icon,
+                    tint = DarkColorScheme.onPrimary, contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                )
+            }
+        },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        modifier = modifier,
+        label = {
+            Text(
+                text = label,
+                modifier = Modifier.padding(start = 10.dp)
+            )
+        },
+        shape = RoundedCornerShape(24.dp),
+        onValueChange = { onValueChange(it) }
+    )
+}
 
 

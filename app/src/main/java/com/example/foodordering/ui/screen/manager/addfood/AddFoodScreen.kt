@@ -38,8 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.AsyncImage
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.example.foodordering.ui.screen.component.DefaultButton
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
@@ -48,7 +48,7 @@ import com.example.foodordering.ui.theme.Tertiary
 @Composable
 fun AddFood(
     onCancel: () -> Unit = {},
-    viewModel: AddFoodViewModel = viewModel()
+    viewModel: AddFoodViewModel = hiltViewModel()
 ) {
 
     val imageList = viewModel.imageListState
