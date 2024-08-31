@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,6 +36,7 @@ import com.example.foodordering.ui.theme.TextColor
 fun TopAppBarHome(
     text: String = "Food Ordering",
     dashboardOnClick: () -> Unit = {},
+    historyOnClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -78,9 +80,11 @@ fun TopAppBarHome(
                 .background(Background),
             contentAlignment = Alignment.Center
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                historyOnClick()
+            }) {
                 Icon(
-                    imageVector = Icons.Outlined.Notifications,
+                    imageVector = Icons.Outlined.History,
                     contentDescription = "",
                     tint = TextColor
                 )

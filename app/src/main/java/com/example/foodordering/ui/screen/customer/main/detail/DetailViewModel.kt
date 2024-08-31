@@ -2,8 +2,6 @@ package com.example.foodordering.ui.screen.customer.main.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.foodordering.data.repository.CustomerRepositoryImpl
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.domain.repository.CustomerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +18,7 @@ class DetailViewModel @Inject constructor(
 
     fun getFood(foodId: String) {
         viewModelScope.launch {
-            _food.value = Food(customerRepository.getFoodById(foodId))
+            _food.value = Food(customerRepository.getFood(foodId))
         }
     }
 

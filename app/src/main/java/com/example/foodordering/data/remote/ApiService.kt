@@ -1,6 +1,5 @@
 package com.example.foodordering.data.remote
 
-import com.example.foodordering.data.dto.CartDTO
 import com.example.foodordering.data.dto.FoodDTO
 import com.example.foodordering.data.dto.ResponseDTO
 import com.example.foodordering.data.dto.UserDTO

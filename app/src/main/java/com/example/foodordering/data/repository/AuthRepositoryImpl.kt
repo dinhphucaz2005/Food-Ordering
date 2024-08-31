@@ -75,7 +75,6 @@ class AuthRepositoryImpl(
             body["password"] = password
             body["phone"] = phoneNumber
             body["address"] = "Ho Chi Minh City"
-            println(body)
             apiService.signUp(body).enqueue(object : Callback<ResponseDTO<UserDTO>> {
                 override fun onResponse(
                     p0: Call<ResponseDTO<UserDTO>>,

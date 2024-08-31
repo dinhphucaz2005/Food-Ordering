@@ -1,5 +1,6 @@
 package com.example.foodordering.ui.navigation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -16,7 +17,7 @@ fun NavGraphBuilder.authNavigation(navController: NavHostController) {
         }
 
         composable(Routes.AUTH_REGISTER) {
-            RegisterScreen(navController = navController)
+            RegisterScreen(navController = navController, hiltViewModel())
         }
 
     }

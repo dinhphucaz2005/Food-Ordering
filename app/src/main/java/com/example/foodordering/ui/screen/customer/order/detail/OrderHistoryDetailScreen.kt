@@ -1,6 +1,7 @@
-package com.example.foodordering.ui.screen.customer.main.confirm
+package com.example.foodordering.ui.screen.customer.order.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -37,30 +39,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.foodordering.di.FakeModule
 import com.example.foodordering.extension.toVND
 import com.example.foodordering.ui.theme.Background
 import com.example.foodordering.ui.theme.Tertiary
 import com.example.foodordering.ui.theme.TextColor
 
-@Preview
 @Composable
-fun Preview() {
-    ConfirmScreen(
-        FakeModule.provideNavController(),
-        FakeModule.provideConfirmViewModel()
-    )
-}
-
-
-@Composable
-fun ConfirmScreen(
+fun OrderHistoryDetailScreen(
+    orderId: String,
     navController: NavHostController,
-    viewModel: ConfirmViewModel = hiltViewModel(),
+    viewModel: OrderHistoryDetailViewModel
 ) {
+
+    LaunchedEffect(orderId) {
+        viewModel.getInvoice(orderId)
+    }
 
     val cart by viewModel.cart.collectAsState()
 
@@ -70,7 +66,7 @@ fun ConfirmScreen(
             .background(Background)
             .padding(12.dp)
     ) {
-        val (backBtn, text, lazyColumn, confirmButton) = createRefs()
+        val (backBtn, text, lazyColumn) = createRefs()
 
         IconButton(
             onClick = { navController.popBackStack() },
@@ -103,7 +99,7 @@ fun ConfirmScreen(
             modifier = Modifier
                 .constrainAs(lazyColumn) {
                     top.linkTo(backBtn.bottom)
-                    bottom.linkTo(confirmButton.top)
+                    bottom.linkTo(parent.bottom)
                     height = Dimension.fillToConstraints
                 }
                 .fillMaxWidth()
@@ -166,25 +162,5 @@ fun ConfirmScreen(
                 }
             }
         }
-
-        Button(
-            onClick = { viewModel.confirm { navController.popBackStack() } },
-            colors = ButtonDefaults.buttonColors(containerColor = Tertiary),
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 12.dp)
-                .fillMaxWidth()
-                .height(60.dp)
-                .constrainAs(confirmButton) {
-                    bottom.linkTo(parent.bottom)
-                },
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text(
-                text = "Confirm", color = Color.White, fontWeight = FontWeight.Bold,
-                fontSize = 36.sp
-            )
-        }
     }
 }
-
-

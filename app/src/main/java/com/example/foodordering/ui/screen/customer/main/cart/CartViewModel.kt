@@ -1,9 +1,8 @@
 package com.example.foodordering.ui.screen.customer.main.cart
 
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodordering.domain.model.Cart
 import com.example.foodordering.domain.repository.CustomerRepository
 import com.example.foodordering.util.AppResource
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.processNextEventInCurrentThread
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,14 +19,15 @@ class CartViewModel @Inject constructor(
     private val repository: CustomerRepository,
 ) : ViewModel() {
 
+    companion object {
+        const val TAG = "CartViewModel"
+    }
 
-    private val _isUpdatedCart = MutableStateFlow(false)
     private val _cart = MutableStateFlow<Cart?>(null)
-    private val _inProgress = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(false)
 
     val cart: StateFlow<Cart?> = _cart.asStateFlow()
-    val isUpdatedCart: StateFlow<Boolean> = _isUpdatedCart.asStateFlow()
-    val inProgress: StateFlow<Boolean> = _inProgress.asStateFlow()
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
 
     init {
@@ -34,11 +35,10 @@ class CartViewModel @Inject constructor(
             when (val result = repository.getCart()) {
                 is AppResource.Success -> {
                     _cart.value = result.data?.let { Cart(it) }
-                    println(_cart.value)
                 }
 
-                else -> {
-                    TODO("Handle error")
+                is AppResource.Error -> {
+//                    TODO("Handle error")
                 }
             }
         }
@@ -56,22 +56,24 @@ class CartViewModel @Inject constructor(
         _cart.value = cart
     }
 
-    fun updateCart() {
+    fun updateCart(callback: () -> Unit) {
         viewModelScope.launch {
+            _isLoading.value = true
             _cart.value?.let { cart ->
                 cart.foods.forEach { food ->
                     when (val result = repository.updateCart(food.id, cart.id, food.quantity)) {
                         is AppResource.Success -> {
-
+//                            TODO("Handle success")
                         }
 
                         is AppResource.Error -> {
-                            println(result.error)
+                            Log.d(TAG, result.error)
                         }
                     }
                 }
             }
-            _isUpdatedCart.value = true
+            _isLoading.value = false
+            callback()
         }
     }
 

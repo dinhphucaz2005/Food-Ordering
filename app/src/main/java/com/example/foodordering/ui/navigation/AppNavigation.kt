@@ -11,6 +11,7 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = Routes.AUTH) {
         authNavigation(navController)
         mainNavigation(navController)
+        orderHistoryNavigation(navController)
     }
 
 }

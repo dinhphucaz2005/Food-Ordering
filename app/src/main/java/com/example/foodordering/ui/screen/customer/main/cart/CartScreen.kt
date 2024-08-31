@@ -53,12 +53,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.foodordering.R
 import com.example.foodordering.data.dto.CartDTO
 import com.example.foodordering.data.dto.FoodDTO
+import com.example.foodordering.di.FakeModule
 import com.example.foodordering.domain.repository.CustomerRepository
 import com.example.foodordering.extension.toVND
 import com.example.foodordering.ui.navigation.Routes
@@ -72,31 +72,8 @@ import com.example.foodordering.util.AppResource
 @Composable
 fun Preview() {
     CartScreen(
-        NavHostController(LocalContext.current), CartViewModel(object : CustomerRepository {
-            override suspend fun getFoods(): AppResource<List<FoodDTO>> {
-                TODO("Not yet implemented")
-            }
-
-            override suspend fun addCart(productId: String): AppResource<CartDTO> {
-                TODO("Not yet implemented")
-            }
-
-            override suspend fun getFoodById(id: String): FoodDTO {
-                TODO("Not yet implemented")
-            }
-
-            override suspend fun getCart(): AppResource<CartDTO> {
-                TODO("Not yet implemented")
-            }
-
-            override suspend fun updateCart(
-                foodId: String,
-                cartId: String,
-                quantity: Int
-            ): AppResource<*> {
-                TODO("Not yet implemented")
-            }
-        })
+        FakeModule.provideNavController(),
+        FakeModule.provideCartViewModel()
     )
 }
 
@@ -107,8 +84,7 @@ fun CartScreen(
     viewModel: CartViewModel = hiltViewModel(),
 ) {
     val cart by viewModel.cart.collectAsState()
-    val isUpdatedCart by viewModel.isUpdatedCart.collectAsState()
-    val inProgress by viewModel.inProgress.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -307,7 +283,11 @@ fun CartScreen(
             }
 
             Button(
-                onClick = { viewModel.updateCart()},
+                onClick = {
+                    viewModel.updateCart() {
+                        navController.navigate(Routes.MAIN_CONFIRM)
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Tertiary),
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp, top = 12.dp)
@@ -330,12 +310,9 @@ fun CartScreen(
         }
     }
 
-
-    if (inProgress) {
+    if (isLoading) {
         WaitingScreen()
     }
-    if (isUpdatedCart)
-        navController.navigate(Routes.MAIN_CONFIRM)
 
 }
 

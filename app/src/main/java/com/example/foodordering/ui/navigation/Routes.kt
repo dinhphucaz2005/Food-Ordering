@@ -13,4 +13,8 @@ object Routes {
     const val MAIN_DETAIL = "MAIN_DETAIL"
     const val MAIN_CART = "MAIN_CART"
     const val MAIN_CONFIRM = "MAIN_CONFIRM"
+
+    const val ORDERHISTORY = "ORDERHISTORY"
+    const val ORDERHISTORY_MAIN = "ORDERHISTORY_MAIN"
+    const val ORDERHISTORY_DETAIL = "ORDERHISTORY_DETAIL"
 }

@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
@@ -101,11 +101,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     //Coil
-    implementation("io.coil-kt:coil-compose:2.1.0")
-
-
-    //Material Icons Extended
-    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     //Nav animation
     implementation("com.google.accompanist:accompanist-navigation-animation:0.32.0")
@@ -118,4 +114,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    //EventBus
+    implementation("org.greenrobot:eventbus:3.3.1")
 }

@@ -79,7 +79,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel,
 ) {
 
     val foods by viewModel.foods.collectAsState()
@@ -116,7 +116,7 @@ fun HomeScreen(
                             if (isClosed) open() else close()
                         }
                     }
-                })
+                }, historyOnClick = { navController.navigate(Routes.ORDERHISTORY) })
 
                 var searchValue by remember {
                     mutableStateOf("")

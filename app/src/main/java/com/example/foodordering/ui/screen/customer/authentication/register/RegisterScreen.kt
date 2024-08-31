@@ -1,7 +1,6 @@
 package com.example.foodordering.ui.screen.customer.authentication.register
 
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,23 +28,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.foodordering.R
+import com.example.foodordering.di.FakeModule
 import com.example.foodordering.ui.component.MyTextField
 import com.example.foodordering.ui.screen.splash.WaitingScreen
 import com.example.foodordering.ui.theme.Background
+import com.example.foodordering.ui.theme.FoodOrderingTheme
 import com.example.foodordering.ui.theme.TextColor
+
+@Preview
+@Composable
+fun Preview() {
+    FoodOrderingTheme {
+        RegisterScreen(
+            FakeModule.provideNavController(),
+            FakeModule.provideRegisterViewModel()
+        )
+    }
+}
 
 @Composable
 fun RegisterScreen(
-    onRegisterSuccess: () -> Unit = {},
-    navController: NavHostController = NavHostController(LocalContext.current),
-    viewModel: RegisterViewModel = hiltViewModel(),
+    navController: NavHostController,
+    viewModel: RegisterViewModel,
 ) {
 
     ConstraintLayout(
@@ -159,7 +170,7 @@ fun RegisterScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextButton(onClick = {
-                    onRegisterSuccess()
+                    navController.popBackStack()
                 }) {
                     Text(
                         text = "Have An Account ?",
@@ -173,16 +184,11 @@ fun RegisterScreen(
 
     viewModel.registerSuccess.value.let {
         if (it) {
-            onRegisterSuccess()
+            navController.popBackStack()
         }
-    }
-    if (viewModel.isLoading.value) {
-        WaitingScreen()
     }
 
-    viewModel.registerMessage.value.let {
-        if (it.isNotEmpty()) {
-            Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
-        }
+    if (viewModel.isLoading.value) {
+        WaitingScreen()
     }
 }

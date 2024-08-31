@@ -1,8 +1,8 @@
 package com.example.foodordering.ui.screen.customer.main.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foodordering.di.FakeData
 import com.example.foodordering.domain.model.Food
 import com.example.foodordering.domain.repository.CustomerRepository
 import com.example.foodordering.util.AppResource
@@ -17,15 +17,19 @@ class HomeViewModel @Inject constructor(
     private val repository: CustomerRepository
 ) : ViewModel() {
 
+    companion object {
+        const val TAG = "HomeViewModel"
+    }
+
     fun addCart(foodId: String) {
         viewModelScope.launch {
             when (val result = repository.addCart(foodId)) {
                 is AppResource.Success -> {
-                    println(result.data)
+                    Log.d(TAG, "Add cart success")
                 }
 
-                else -> {
-                    println(result)
+                is AppResource.Error -> {
+                    Log.d(TAG, result.error)
                 }
             }
         }
@@ -40,11 +44,11 @@ class HomeViewModel @Inject constructor(
             when (val result = repository.getFoods()) {
                 is AppResource.Success -> {
                     result.data?.let { _foods.value = it.map { foodDTOs -> Food(foodDTOs) } }
-                    println(_foods.value)
+                    Log.d(TAG, "init: ${_foods.value}")
                 }
 
-                else -> {
-                    println(result)
+                is AppResource.Error -> {
+                    Log.d(TAG, result.error)
                 }
             }
         }

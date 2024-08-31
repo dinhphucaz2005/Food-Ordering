@@ -1,5 +1,6 @@
 package com.example.foodordering.ui.navigation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -13,7 +14,7 @@ fun NavGraphBuilder.mainNavigation(navController: NavHostController) {
 
     navigation(startDestination = Routes.MAIN_HOME, route = Routes.MAIN) {
 
-        composable(Routes.MAIN_HOME) { HomeScreen(navController) }
+        composable(Routes.MAIN_HOME) { HomeScreen(navController, hiltViewModel()) }
         composable(Routes.MAIN_CART) { CartScreen(navController) }
         composable(Routes.MAIN_DETAIL + "/{foodId}") { backstackEntry ->
             val id = backstackEntry.arguments?.getString("foodId")
